@@ -18,11 +18,5 @@ macro(getSrcFiles dir)
 endmacro()
 
 getSrcFiles(".")
-# 指定连接库的搜索目录
-link_directories(${PROJECT_SOURCE_DIR}/lib)
-
-add_executable(main ${srcFiles})
-
-# 添加库依赖
-target_link_libraries(main DocFind)
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
+add_library(DocFind ${srcFiles})
+set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
