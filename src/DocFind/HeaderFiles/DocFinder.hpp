@@ -3,9 +3,12 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 #include "./Document.hpp"
 #include "./DFFile.hpp"
-#include "./KeyWordToDocManager.hpp"
+#include "./DocumentManager.hpp"
+#include "./DocumentOpenerFactory.hpp"
+#include "./DocumentReaderFactory.hpp"
 
 namespace DocFind
 {
@@ -23,19 +26,23 @@ namespace DocFind
     {
     private:
         // 当前文档查找路径
-        DFFile _dir;
+        std::string _dirPath;
 
-        KeyWordToDocManager _keyWordToDocManager;
+        std::shared_ptr<DocumentManager> _documentManager;
+
+        std::shared_ptr<DocumentOpenerFactory> _documentOpenerFactory;
+
+        std::shared_ptr<DocumentReaderFactory> _documentReaderFactory;
 
     public:
-        DocFinder(DFFile &dir);
+        DocFinder(std::string dirPath);
         ~DocFinder() = default;
 
         void addKeyWordToDoc(std::vector<std::string> keys, Document doc) const;
 
-        FindResult find(std::vector<std::string> keys);
+        std::vector<FindResult> find(std::vector<std::string> keys) const;
 
-        void open(Document doc);
+        void open(Document doc) const;
     };
 } // namespace DocFind
 

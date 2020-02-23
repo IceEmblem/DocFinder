@@ -1,8 +1,8 @@
 #ifndef DocumentOpenerFactory_H
 #define DocumentOpenerFactory_H
 
+#include <string>
 #include "./DocumentOpener.hpp"
-#include "./Document.hpp"
 
 namespace DocFind
 {
@@ -14,7 +14,7 @@ namespace DocFind
         DocumentOpenerFactory(/* args */);
         ~DocumentOpenerFactory();
 
-        DocumentOpener getDocumentOpener(Document doc);
+        DocumentOpener* getDocumentOpener(std::string docPostfix) const;
     };    
 } // namespace DocFind
 #endif

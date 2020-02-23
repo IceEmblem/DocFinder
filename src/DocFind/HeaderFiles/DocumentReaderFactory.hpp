@@ -1,8 +1,8 @@
 #ifndef DocumentReaderFactory_H
 #define DocumentReaderFactory_H
 
+#include <string>
 #include "./DocumentReader.hpp"
-#include "./Document.hpp"
 
 namespace DocFind
 {
@@ -14,7 +14,7 @@ namespace DocFind
         DocumentReaderFactory(/* args */);
         ~DocumentReaderFactory();
 
-        DocumentReader getDocumentReader(Document doc);
+        DocumentReader* getDocumentReader(std::string docPostfix) const;
     };    
 } // namespace DocFind
 #endif

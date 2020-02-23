@@ -13,7 +13,7 @@ namespace DocFind
         DocumentOpener(/* args */);
         ~DocumentOpener();
 
-        void open(std::string path);
+        void open(std::string docPath);
     }; 
 } // namespace DocFind
 #endif

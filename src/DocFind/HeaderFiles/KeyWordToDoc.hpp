@@ -2,6 +2,7 @@
 #define KeyWordToDoc_H
 
 #include <string>
+#include <vector>
 #include "./Document.hpp"
 
 namespace DocFind
@@ -11,10 +12,10 @@ namespace DocFind
     private:
         /* data */
     public:
-        KeyWordToDoc(std::string key, Document doc): key(key), doc(doc) { }
+        KeyWordToDoc(std::string fullPath, std::vector<std::string> keys): fullPath(fullPath), keys(keys) { }
 
-        std::string key;
-        Document doc;
+        std::string fullPath;
+        std::vector<std::string> keys;
     };    
 } // namespace DocFind
 #endif

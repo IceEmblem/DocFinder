@@ -2,6 +2,8 @@
 #define DFFile_H
 
 #include <string>
+#include <regex>
+#include <vector>
 
 namespace DocFind
 {
@@ -14,11 +16,24 @@ namespace DocFind
     protected:
 
     public:
+        DFFile(std::string fullPath, bool isDir, std::vector<std::string> keys):fullPath(fullPath), isDir(isDir), keys(keys)
+        {
+            static std::regex nameRegex("(\\|/)(.*?)$");
+            std::smatch sresult;
+            if (std::regex_search(fullPath, sresult, nameRegex))
+            {
+                name = sresult.str(2);
+            }
+            else
+            {
+                name = "";
+            }
+        };
+
+        std::string fullPath;
         std::string name;
         bool isDir;
-        DFFile *parent;
-
-        std::string getCurrentFullPath();
+        std::vector<std::string> keys;
     };
 } // namespace DocFind
 #endif

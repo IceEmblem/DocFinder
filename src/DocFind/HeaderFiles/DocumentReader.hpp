@@ -15,7 +15,7 @@ namespace DocFind
         DocumentReader(Document doc);
         ~DocumentReader();
 
-        std::vector<std::string> getDocTitle();
+        std::vector<std::string> getDocTitle(std::string docPath);
     };    
 } // namespace DocFind
 #endif
