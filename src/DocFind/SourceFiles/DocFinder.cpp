@@ -61,7 +61,7 @@ namespace DocFind
                 throw std::logic_error("文档不存在后缀，无法找到合适的程序用于打开文档");
         }
 
-        DocumentOpener* docOpener = _documentOpenerFactory->getDocumentOpener(sresult.str(1));
+       std::shared_ptr<DocumentOpener> docOpener = _documentOpenerFactory->getDocumentOpener(sresult.str(1));
         if(!docOpener){
             throw std::logic_error("无法找到合适的程序用于打开文档");
         }

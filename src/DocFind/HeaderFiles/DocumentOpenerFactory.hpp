@@ -14,7 +14,8 @@ namespace DocFind
         DocumentOpenerFactory(/* args */);
         ~DocumentOpenerFactory();
 
-        DocumentOpener* getDocumentOpener(std::string docPostfix) const;
+        static void Register(DocumentOpener opener);
+        std::shared_ptr<DocumentOpener> getDocumentOpener(std::string docPostfix) const;
     };    
 } // namespace DocFind
 #endif

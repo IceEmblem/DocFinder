@@ -13,7 +13,8 @@ namespace DocFind
         DocumentOpener(/* args */);
         ~DocumentOpener();
 
-        void open(std::string docPath);
+        bool isCanOpen(std::string docPostfix) const;
+        void open(std::string docPath) const;
     }; 
 } // namespace DocFind
 #endif
