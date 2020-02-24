@@ -11,9 +11,6 @@ namespace DocFind
     private:
         /* data */
     public:
-        DocumentReaderFactory(/* args */);
-        ~DocumentReaderFactory();
-
         DocumentReader* getDocumentReader(std::string docPostfix) const;
     };    
 } // namespace DocFind

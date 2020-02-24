@@ -11,10 +11,11 @@ namespace DocFind
     private:
         /* data */
     public:
-        DocumentOpenerFactory(/* args */);
-        ~DocumentOpenerFactory();
+        // 注册 文档打开器，TDocumentOpener必须继承DocumentOpener
+        template<typename TDocumentOpener>
+        static void Register(TDocumentOpener* opener);
 
-        static void Register(DocumentOpener opener);
+        // 获取 文档打开器
         std::shared_ptr<DocumentOpener> getDocumentOpener(std::string docPostfix) const;
     };    
 } // namespace DocFind

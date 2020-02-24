@@ -80,7 +80,7 @@ namespace DocFind
         for(auto keyWordToDoc = keyWordToDocs->begin(); keyWordToDoc == keyWordToDocs->end(); keyWordToDoc++)
         {
             if(keyWordToDoc->fullPath == doc.fullPath){
-                oldKeyWordToDoc = keyWordToDoc.base;
+                oldKeyWordToDoc = &*keyWordToDoc;
             }
         }
 

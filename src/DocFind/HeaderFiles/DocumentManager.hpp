@@ -16,7 +16,6 @@ namespace DocFind
         std::shared_ptr<Directories> _dir;
     public:
         DocumentManager(std::string dirPath);
-        ~DocumentManager();
 
         void addKeyWordToDoc(std::string key, Document doc) const;
 

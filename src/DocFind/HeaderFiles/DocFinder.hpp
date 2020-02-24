@@ -16,7 +16,6 @@ namespace DocFind
     {
     public:
         FindResult(Document doc, std::string matchText) : document(doc), matchText(matchText) { }
-        ~FindResult();
 
         std::string matchText;
         Document document;
@@ -36,7 +35,6 @@ namespace DocFind
 
     public:
         DocFinder(std::string dirPath);
-        ~DocFinder() = default;
 
         void addKeyWordToDoc(std::vector<std::string> keys, Document doc) const;
 

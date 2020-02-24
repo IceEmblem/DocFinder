@@ -10,11 +10,8 @@ namespace DocFind
     private:
         /* data */
     public:
-        DocumentOpener(/* args */);
-        ~DocumentOpener();
-
-        bool isCanOpen(std::string docPostfix) const;
-        void open(std::string docPath) const;
+        virtual bool isCanOpen(std::string docPostfix) const = 0;
+        virtual void open(std::string docPath) const = 0;
     }; 
 } // namespace DocFind
 #endif

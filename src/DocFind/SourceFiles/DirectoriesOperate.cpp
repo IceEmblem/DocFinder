@@ -32,10 +32,10 @@ namespace DocFind
     {
         std::map<std::string, bool> files;
 
-        DIR *pDir;
+        DIR *pDir = nullptr;
         struct dirent* ptr;
         if(!(pDir = opendir(dirPath.c_str())))
-            return;
+            return files;
         while((ptr = readdir(pDir))!=0) {
             if (strcmp(ptr->d_name, ".") != 0 && strcmp(ptr->d_name, "..") != 0)
                 files[ptr->d_name] = ptr->d_type == DT_DIR;

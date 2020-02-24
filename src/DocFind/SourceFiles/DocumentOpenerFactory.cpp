@@ -4,26 +4,20 @@
 
 namespace DocFind
 {
-    class DocumentOpenerFactory
-    {
-    private:
-        static std::vector<std::shared_ptr<DocumentOpener>> openers;
-    public:
-        DocumentOpenerFactory(/* args */);
-        ~DocumentOpenerFactory();
+    static std::vector<std::shared_ptr<DocumentOpener>> openers;
 
-        static void Register(DocumentOpener opener){
-            openers.push_back(std::make_shared<DocumentOpener>(opener));
-        }
+    template<typename TDocumentOpener>
+    void DocumentOpenerFactory::Register(TDocumentOpener* opener){
+            openers.push_back(std::make_shared<DocumentOpener>(*opener));
+    }
 
-        std::shared_ptr<DocumentOpener> getDocumentOpener(std::string docPostfix) const{
-            for(auto opener : openers){
-                if(opener->isCanOpen(docPostfix)){
-                    return opener;
-                }
+    std::shared_ptr<DocumentOpener> DocumentOpenerFactory::getDocumentOpener(std::string docPostfix) const{
+        for(auto opener : openers){
+            if(opener->isCanOpen(docPostfix)){
+                return opener;
             }
-
-            return nullptr;
         }
-    };
+
+        return nullptr;
+    }
 } // namespace DocFind

@@ -10,11 +10,7 @@ namespace DocFind
     class DocumentReader
     {
     private:
-        Document _doc;
     public:
-        DocumentReader(Document doc);
-        ~DocumentReader();
-
         std::vector<std::string> getDocTitle(std::string docPath);
     };    
 } // namespace DocFind
