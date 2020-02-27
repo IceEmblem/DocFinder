@@ -5,7 +5,9 @@
     "tasks": [
         {
             "label": "debug",
+            // 任务的类型
             "type": "shell",
+            // 执行的命令
             "command": "cmake -DCMAKE_BUILD_TYPE=Debug .; make;"
         },
         {

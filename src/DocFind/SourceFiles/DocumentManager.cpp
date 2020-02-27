@@ -14,12 +14,8 @@ namespace DocFind
         return Directories::docFindDirPath +  keyWordToDocFileRelativePath;
     }
 
-    static std::shared_ptr<std::vector<KeyWordToDoc>> keyWordToDocs = nullptr;
-
-    static std::shared_ptr<std::vector<std::shared_ptr<Document>>> keyDocument = nullptr;
-
-        // 从文件读取KeyWordToDoc
-    static void readKeyWordToDocFromFile(std::string keyWordToDocFilePath)
+    // 从文件读取KeyWordToDoc
+    void DocumentManager::readKeyWordToDocFromFile(std::string keyWordToDocFilePath)
     {
         // 实例 keyWordToDocs 列表
         keyWordToDocs = std::make_shared<std::vector<KeyWordToDoc>>(std::vector<KeyWordToDoc>());
@@ -73,7 +69,7 @@ namespace DocFind
     }
 
     // 将KeyWordToDoc写入到文件
-    static void writeKeyWordToDocToFile()
+    void DocumentManager::writeKeyWordToDocToFile()
     {
         std::ofstream file(getKeyWordToDocFilePath());
 
@@ -90,7 +86,7 @@ namespace DocFind
     }
     
     // 将关键字关联到文档
-    void DocumentManager::addKeyWordToDoc(std::string key, Document doc) const
+    void DocumentManager::addKeyWordToDoc(std::string key, Document doc)
     {
         KeyWordToDoc *oldKeyWordToDoc = nullptr;
         
@@ -182,8 +178,8 @@ namespace DocFind
         
     }
 
-    // 将关键字添加到文档中
-    static void addKeysToDoc(std::vector<std::shared_ptr<Document>> &docs)
+    // 将关键字添加到文档对象中
+    void DocumentManager::addKeysToDocObject(std::vector<std::shared_ptr<Document>> &docs)
     {
         for(auto keyWordToDoc : *keyWordToDocs){
             int index = getDocIndexForPath(docs, keyWordToDoc.relativePath);
@@ -198,13 +194,13 @@ namespace DocFind
     }
 
     // 获取文档
-    std::vector<std::shared_ptr<Document>> DocumentManager::getDocuments() const
+    std::vector<std::shared_ptr<Document>> DocumentManager::getDocuments()
     {
         if(keyDocument){
             return *keyDocument;
         }
         std::vector<std::shared_ptr<Document>> docs = DocFind::getDocuments(_dir);
-        addKeysToDoc(docs);
+        addKeysToDocObject(docs);
         keyDocument = std::make_shared<std::vector<std::shared_ptr<Document>>>(docs);
 
         return *keyDocument;

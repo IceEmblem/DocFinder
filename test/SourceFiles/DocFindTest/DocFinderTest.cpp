@@ -1,8 +1,13 @@
 #include <gtest/gtest.h>
 #include <fstream>
+#include "../../../src/DocFind/HeaderFiles/DirectoriesOperate.hpp"
 #include "../../../src/DocFind/HeaderFiles/DocFinder.hpp"
 
+using namespace  DocFind;
+
 using namespace std;
+
+static std::string programDirPath = "./test/bin";
 
 DocFind::DocFinder * docFinder;
 
@@ -13,11 +18,13 @@ public:
     // 第一个测试用例开始时调用
     static void SetUpTestCase()
     {
+        DirectoriesOperate::createDir(programDirPath + "/DocFinderTestDir");
+
         // 创建测试文件
-        ofstream file1("./test/bin/TestFile1.txt", fstream::out);
+        ofstream file1(programDirPath+"/DocFinderTestDir/Pre_DocFinderTestFile1.txt", fstream::out);
         file1.close();
 
-        ofstream file2("./test/bin/TestFile2.txt", fstream::out);
+        ofstream file2(programDirPath+"/DocFinderTestDir/Pre_DocFinderTestFile2.txt", fstream::out);
         file2.close();
     }
     
@@ -29,7 +36,7 @@ public:
     // 每个测试用例开始时调用
     void SetUp()
     {
-        docFinder = new DocFind::DocFinder("./test/bin");
+        docFinder = new DocFind::DocFinder(programDirPath + "/DocFinderTestDir");
     }
 
     // 每个测试用例结束后调用
@@ -42,8 +49,8 @@ public:
 // 测试用例，用例名为 FindTest
 TEST_F(DocFinderTest, FindTest)
 {
-    auto results = docFinder->find({ "File1" });
+    auto results = docFinder->find({ "DocFinderTestFile1" });
 
     EXPECT_EQ(results.size(), 1);
-    EXPECT_EQ(results[0].document.name, "TestFile1.txt");
+    EXPECT_EQ(results[0].document.name, "Pre_DocFinderTestFile1.txt");
 }

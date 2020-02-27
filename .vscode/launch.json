@@ -5,15 +5,20 @@
     "version": "0.2.0",
     "configurations": [
         {
+            // 启动的显示名称
             "name": "调试",
             "type": "cppdbg",
             "request": "launch",
+            // 要启动的可执行程序路径
             "program": "${workspaceFolder}/bin/main",
+            // 启动时需要的参数
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
+            // 调试时是否显示控制台窗口
             "externalConsole": false,
+            // 调试器
             "MIMode": "gdb",
             "setupCommands": [
                 {
@@ -22,6 +27,7 @@
                     "ignoreFailures": true
                 }
             ],
+            // 启动前需要执行的任务
             "preLaunchTask": "debug"
         },
         {

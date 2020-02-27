@@ -20,7 +20,7 @@ namespace DocFind
         {
             fullPath = docFindDirPath + relativePath;
             
-            static std::regex nameRegex("(\\\\|/)(.*?)$");
+            static std::regex nameRegex("(\\\\|/)([^\\\\/]*?)$");
             std::smatch sresult;
             if (std::regex_search(relativePath, sresult, nameRegex))
             {
