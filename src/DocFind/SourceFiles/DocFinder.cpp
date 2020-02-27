@@ -28,7 +28,7 @@ namespace DocFind
 
         for(auto doc : docs){
             for(auto docKey : doc->keys){
-                if(docKey.find(key) >= 0){
+                if(docKey.find(key) != docKey.npos){
                     results.push_back(doc);
                 }
             }

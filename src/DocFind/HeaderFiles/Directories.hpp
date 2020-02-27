@@ -23,11 +23,12 @@ namespace DocFind
                 std::vector<std::string> childKeys = keys;
                 childKeys.push_back(childFile.first);
 
-                std::shared_ptr<DFFile> childPtr = childFile.second == true ?
-                    std::make_shared<DFFile>(Directories(relativePath + "/" + childFile.first, childKeys)):
-                    std::make_shared<DFFile>(Document(relativePath + "/" + childFile.first, childKeys));
-                    
-                childs.push_back(childPtr);
+                if(childFile.second == true){
+                    childs.push_back(std::make_shared<Directories>(Directories(relativePath + "/" + childFile.first, childKeys)));
+                }
+                else{
+                    childs.push_back(std::make_shared<Document>(Document(relativePath + "/" + childFile.first, childKeys)));
+                }
             }
 
             // 对子文件进行排序
