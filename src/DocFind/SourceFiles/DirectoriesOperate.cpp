@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <regex>
 #include "../HeaderFiles/DirectoriesOperate.hpp"
 
 #ifdef WIN32
@@ -44,8 +45,33 @@ namespace DocFind
 
         return files;
     }
+
+
 }
 #endif
+
+namespace DocFind
+{
+    bool DirectoriesOperate::createDir(std::string dirPath)
+    {
+        std::string command = "mkdir -p " + dirPath;  
+        system(command.c_str());
+    }
+
+    std::string DirectoriesOperate::getDirPath(std::string filePath)
+    {
+        std::string path;
+        static std::regex nameRegex("(.*?)(\\\\|/)[^\\\\/]*?$");
+        std::smatch sresult;
+        if (std::regex_search(filePath, sresult, nameRegex))
+        {
+            path = sresult.str(1);
+        }
+
+        return path;
+    }
+}
+
 
 // #ifdef linux
 // #endif

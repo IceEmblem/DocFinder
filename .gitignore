@@ -23,7 +23,6 @@
 # Compiled Static libraries
 *.lai
 *.la
-*.a
 *.lib
 
 # Executables
@@ -36,3 +35,4 @@ cmake_install.cmake
 CMakeCache.txt
 CMakeFiles/
 bin/
+lib/

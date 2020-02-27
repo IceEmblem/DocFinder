@@ -16,11 +16,13 @@ namespace DocFind
     protected:
 
     public:
-        DFFile(std::string fullPath, bool isDir, std::vector<std::string> keys):fullPath(fullPath), isDir(isDir), keys(keys)
+        DFFile(std::string relativePath, bool isDir, std::vector<std::string> keys):relativePath(relativePath), isDir(isDir), keys(keys)
         {
-            static std::regex nameRegex("(\\|/)(.*?)$");
+            fullPath = docFindDirPath + relativePath;
+            
+            static std::regex nameRegex("(\\\\|/)(.*?)$");
             std::smatch sresult;
-            if (std::regex_search(fullPath, sresult, nameRegex))
+            if (std::regex_search(relativePath, sresult, nameRegex))
             {
                 name = sresult.str(2);
             }
@@ -31,9 +33,13 @@ namespace DocFind
         };
 
         std::string fullPath;
+        std::string relativePath;
         std::string name;
         bool isDir;
         std::vector<std::string> keys;
+
+        // 当前文档查找目录路径
+        static std::string docFindDirPath;
     };
-} // namespace DocFind
+}
 #endif

@@ -12,9 +12,9 @@ namespace DocFind
     private:
         /* data */
     public:
-        KeyWordToDoc(std::string fullPath, std::vector<std::string> keys): fullPath(fullPath), keys(keys) { }
+        KeyWordToDoc(std::string relativePath, std::vector<std::string> keys): relativePath(relativePath), keys(keys) { }
 
-        std::string fullPath;
+        std::string relativePath;
         std::vector<std::string> keys;
     };    
 } // namespace DocFind

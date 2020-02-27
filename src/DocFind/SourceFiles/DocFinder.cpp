@@ -13,6 +13,7 @@ namespace DocFind
         _documentManager =  std::make_shared<DocumentManager>(DocumentManager(dirPath));
     }
 
+    // 添加关键字到文档
     void DocFinder::addKeyWordToDoc(std::vector<std::string> keys, Document doc) const 
     {
         for(auto key : keys){

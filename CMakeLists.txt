@@ -3,3 +3,4 @@ project (DocFinder)
 
 add_subdirectory("src/DocFind")
 add_subdirectory("src/Program")
+add_subdirectory(test)

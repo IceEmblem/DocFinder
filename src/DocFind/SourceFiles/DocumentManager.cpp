@@ -6,23 +6,39 @@
 
 namespace DocFind
 {
-    static std::string keyWordToDocFilePath("./DocFinder/KeyWordToDocs.txt");
+    // 关键字到文档文件 的相对路径
+    static std::string keyWordToDocFileRelativePath("/DocFinder/KeyWordToDocs.txt");
+
+    // 获取 关键字到文档文件 的路径
+    static std::string getKeyWordToDocFilePath(){
+        return Directories::docFindDirPath +  keyWordToDocFileRelativePath;
+    }
 
     static std::shared_ptr<std::vector<KeyWordToDoc>> keyWordToDocs = nullptr;
 
     static std::shared_ptr<std::vector<std::shared_ptr<Document>>> keyDocument = nullptr;
 
         // 从文件读取KeyWordToDoc
-    static void readKeyWordToDocFromFile()
+    static void readKeyWordToDocFromFile(std::string keyWordToDocFilePath)
     {
-        std::ifstream keyWordToDocFile;
-        keyWordToDocFile.open(keyWordToDocFilePath);
-        if(!keyWordToDocFile){
-            throw std::runtime_error(std::string("无法打开") + keyWordToDocFilePath + "文件，请确保文件存在");
-        }
-
         // 实例 keyWordToDocs 列表
         keyWordToDocs = std::make_shared<std::vector<KeyWordToDoc>>(std::vector<KeyWordToDoc>());
+
+        std::ifstream keyWordToDocFile;
+        keyWordToDocFile.open(keyWordToDocFilePath);
+
+        // 如果文件不存在，则创建文件
+        if(!keyWordToDocFile){
+            keyWordToDocFile.close();
+
+            std::string path = DirectoriesOperate::getDirPath(keyWordToDocFilePath);
+            DirectoriesOperate::createDir(path);
+
+            std::ofstream keyWordToDocFileOutput;
+            keyWordToDocFileOutput.open(keyWordToDocFilePath, std::fstream::out);
+            keyWordToDocFileOutput.close();
+            return;
+        }
 
         std::string line;
         while (std::getline(keyWordToDocFile, line))
@@ -51,17 +67,18 @@ namespace DocFind
 
     DocumentManager::DocumentManager(std::string dirPath)
     {
-        _dir = std::make_shared<Directories>(Directories(dirPath, std::vector<std::string>()));
-        readKeyWordToDocFromFile();
+        Directories::docFindDirPath = dirPath;
+        _dir = std::make_shared<Directories>(Directories("", std::vector<std::string>()));
+        readKeyWordToDocFromFile(getKeyWordToDocFilePath());
     }
 
     // 将KeyWordToDoc写入到文件
     static void writeKeyWordToDocToFile()
     {
-        std::ofstream file(keyWordToDocFilePath);
+        std::ofstream file(getKeyWordToDocFilePath());
 
         for(auto keyWordToDoc : *keyWordToDocs){
-            file << keyWordToDoc.fullPath + " ";
+            file << keyWordToDoc.relativePath + " ";
             for(auto key : keyWordToDoc.keys)
             {
                 file << key + " ";
@@ -79,7 +96,7 @@ namespace DocFind
         
         for(auto keyWordToDoc = keyWordToDocs->begin(); keyWordToDoc == keyWordToDocs->end(); keyWordToDoc++)
         {
-            if(keyWordToDoc->fullPath == doc.fullPath){
+            if(keyWordToDoc->relativePath == doc.relativePath){
                 oldKeyWordToDoc = &*keyWordToDoc;
             }
         }
@@ -88,7 +105,7 @@ namespace DocFind
             oldKeyWordToDoc->keys.push_back(key);
         }
         else{
-            KeyWordToDoc newKeyWordToDoc(doc.fullPath, { key });
+            KeyWordToDoc newKeyWordToDoc(doc.relativePath, { key });
             keyWordToDocs->push_back(newKeyWordToDoc);
         }
 
@@ -132,7 +149,7 @@ namespace DocFind
 
         while (true)
         {
-            int result = docs[middleIndex]->fullPath.compare(path);
+            int result = docs[middleIndex]->relativePath.compare(path);
             if(result == 0){
                 return middleIndex;
             }
@@ -169,7 +186,7 @@ namespace DocFind
     static void addKeysToDoc(std::vector<std::shared_ptr<Document>> &docs)
     {
         for(auto keyWordToDoc : *keyWordToDocs){
-            int index = getDocIndexForPath(docs, keyWordToDoc.fullPath);
+            int index = getDocIndexForPath(docs, keyWordToDoc.relativePath);
             if(index < 0){
                 continue;
             }

@@ -4,9 +4,14 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build",
+            "label": "debug",
             "type": "shell",
-            "command": "cmake .; make;"
+            "command": "cmake -DCMAKE_BUILD_TYPE=Debug .; make;"
+        },
+        {
+            "label": "release",
+            "type": "shell",
+            "command": "cmake -DCMAKE_BUILD_TYPE=Release .; make;"
         }
     ]
 }

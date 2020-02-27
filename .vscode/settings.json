@@ -47,6 +47,8 @@
         "bitset": "cpp",
         "cstring": "cpp",
         "ctime": "cpp",
-        "map": "cpp"
+        "map": "cpp",
+        "set": "cpp",
+        "iomanip": "cpp"
     }
 }

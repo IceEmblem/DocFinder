@@ -12,7 +12,7 @@ namespace DocFind
     private:
         /* data */
     public:
-        Document(std::string fullPath, std::vector<std::string> parentKeys):DFFile(fullPath, false, parentKeys)
+        Document(std::string relativePath, std::vector<std::string> parentKeys):DFFile(relativePath, false, parentKeys)
         {
         }
     };    
