@@ -39,6 +39,9 @@ public:
     // 每个测试用例开始时调用
     void SetUp()
     {
+        // 清理文档
+        ofstream file1(currentDirPath+"/DocFinder/KeyWordToDocs.txt", fstream::out);
+        file1.close();
         documentManager = new DocumentManager(currentDirPath);
     }
 
@@ -66,4 +69,40 @@ TEST_F(DocumentManagerTest, getDocuments)
     }
 
     EXPECT_EQ(isHaveFile3, true);
+}
+
+TEST_F(DocumentManagerTest, addKeyWordToDoc)
+{
+    auto results = documentManager->getDocuments();
+    std::shared_ptr<Document> file3Doc;
+
+    for(auto result : results){
+        if(result->name == "File3.txt"){
+            file3Doc = result;
+            break;
+        }
+    }
+
+    documentManager->addKeyWordToDoc("File3TestKey", file3Doc);
+
+    DocumentManager newDocumentManager(currentDirPath);
+    auto newResults = newDocumentManager.getDocuments();
+    std::shared_ptr<Document> newFile3Doc;
+
+    for(auto result : newResults){
+        if(result->name == "File3.txt"){
+            newFile3Doc = result;
+            break;
+        }
+    }
+
+    bool isHadKey = false;
+    for(auto key : newFile3Doc->keys){
+        if(key == "File3TestKey"){
+            isHadKey = true;
+            break;
+        }
+    }
+    
+    EXPECT_EQ(isHadKey, true);
 }

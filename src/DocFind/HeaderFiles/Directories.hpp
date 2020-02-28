@@ -33,7 +33,7 @@ namespace DocFind
 
             // 对子文件进行排序
             std::sort(childs.begin(), childs.end(), [](std::shared_ptr<DFFile>  left, std::shared_ptr<DFFile>  right){
-                return left->relativePath.compare(right->relativePath);
+                return right->relativePath.compare(left->relativePath) > 0 ? true : false;
             });
         }
         

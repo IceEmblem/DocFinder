@@ -19,7 +19,7 @@ namespace DocFind
 
         // 从文件中读取 KeyWordToDoc
         void readKeyWordToDocFromFile(std::string keyWordToDocFilePath);
-        
+
         // 将 KeyWordToDoc 写入文件
         void writeKeyWordToDocToFile();
 
@@ -29,7 +29,9 @@ namespace DocFind
         DocumentManager(std::string dirPath);
 
         // 将关键字关联到文档
-        void addKeyWordToDoc(std::string key, Document doc);
+        void addKeyWordToDoc(std::string key, std::shared_ptr<Document> doc);
+
+        void addKeyWordToDoc(std::string key, std::string docPath);
 
         // 获取文档
         std::vector<std::shared_ptr<Document>> getDocuments();

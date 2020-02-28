@@ -17,7 +17,7 @@ namespace DocFind
     void DocFinder::addKeyWordToDoc(std::vector<std::string> keys, Document doc) const 
     {
         for(auto key : keys){
-            _documentManager->addKeyWordToDoc(key, doc);
+            _documentManager->addKeyWordToDoc(key, doc.relativePath);
         }
     }
 
