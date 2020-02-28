@@ -9,11 +9,6 @@ namespace DocFind
     // 关键字到文档文件 的相对路径
     static std::string keyWordToDocFileRelativePath("/DocFinder/KeyWordToDocs.txt");
 
-    // 获取 关键字到文档文件 的路径
-    static std::string getKeyWordToDocFilePath(){
-        return Directories::docFindDirPath +  keyWordToDocFileRelativePath;
-    }
-
     // 根据路径查找文档，使用折中算法
     static int getDocIndexForPath(std::vector<std::shared_ptr<Document>> &docs, std::string path)
     {
@@ -130,17 +125,41 @@ namespace DocFind
         keyWordToDocFile.close();
     }
 
-    DocumentManager::DocumentManager(std::string dirPath)
+    DocumentManager::DocumentManager(std::string dirPath):_dirPath(dirPath)
     {
-        Directories::docFindDirPath = dirPath;
-        _dir = std::make_shared<Directories>(Directories("", std::vector<std::string>()));
-        readKeyWordToDocFromFile(getKeyWordToDocFilePath());
+        _dir = createDirectories("", {});
+        readKeyWordToDocFromFile(_dirPath + keyWordToDocFileRelativePath);
     }
 
+    std::shared_ptr<Directories> DocumentManager::createDirectories(std::string relativePath, std::vector<std::string> keys)
+    {
+            auto childFiles = DirectoriesOperate::getFiles(_dirPath + relativePath);
+            std::vector<std::shared_ptr<DFFile>> childs;
+
+            for(auto childFile : childFiles){
+                std::vector<std::string> childKeys = keys;
+                childKeys.push_back(childFile.first);
+
+                if(childFile.second == true){
+                    childs.push_back(createDirectories(relativePath + "/" + childFile.first, childKeys));
+                }
+                else{
+                    childs.push_back(std::make_shared<Document>(Document(relativePath + "/" + childFile.first, childKeys)));
+                }
+            }
+
+            // 对子文件进行排序
+            std::sort(childs.begin(), childs.end(), [](std::shared_ptr<DFFile>  left, std::shared_ptr<DFFile>  right){
+                return right->relativePath.compare(left->relativePath) > 0 ? true : false;
+            });
+
+            return std::make_shared<Directories>(Directories(relativePath, keys, childs));
+    }
+    
     // 将KeyWordToDoc写入到文件
     void DocumentManager::writeKeyWordToDocToFile()
     {
-        std::ofstream file(getKeyWordToDocFilePath());
+        std::ofstream file(_dirPath + keyWordToDocFileRelativePath);
 
         for(auto keyWordToDoc : *keyWordToDocs){
             file << keyWordToDoc.relativePath + " ";
@@ -224,5 +243,14 @@ namespace DocFind
         keyDocument = std::make_shared<std::vector<std::shared_ptr<Document>>>(docs);
 
         return *keyDocument;
+    }
+
+    // 获取文件完整路径
+    std::string DocumentManager::getFullPath(std::shared_ptr<DFFile> file){
+        return getFullPath(file.get());
+    }
+
+    std::string DocumentManager::getFullPath(DFFile* file){
+        return _dirPath + file->relativePath;
     }
 } // namespace DocFind

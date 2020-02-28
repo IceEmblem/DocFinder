@@ -57,7 +57,7 @@ namespace DocFind
     {
         static std::regex postfix("\\.(.+)$");
         std::smatch sresult;
-        if (std::regex_search(doc.fullPath, sresult, postfix))
+        if (std::regex_search(doc.name, sresult, postfix))
         {
                 throw std::logic_error("文档不存在后缀，无法找到合适的程序用于打开文档");
         }
@@ -67,6 +67,6 @@ namespace DocFind
             throw std::logic_error("无法找到合适的程序用于打开文档");
         }
 
-        docOpener->open(doc.fullPath);
+        docOpener->open(_documentManager->getFullPath(&doc));
     }
 } // namespace DocFind

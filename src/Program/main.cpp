@@ -10,7 +10,7 @@ int main(){
     auto results = docFinder.find({"test"});
     
     for(auto findResult : results){
-        std::cout << findResult.document.fullPath << std::endl;
+        std::cout << findResult.document.name << std::endl;
     }
 
     return 0;
