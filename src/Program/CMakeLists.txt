@@ -17,7 +17,7 @@ macro(getSrcFiles dir)
     endforeach()
 endmacro()
 
-getSrcFiles(".")
+getSrcFiles("./SourceFiles")
 # 指定连接库的搜索目录
 link_directories(${PROJECT_SOURCE_DIR}/lib)
 

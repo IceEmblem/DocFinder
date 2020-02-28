@@ -17,6 +17,6 @@ macro(getSrcFiles dir)
     endforeach()
 endmacro()
 
-getSrcFiles(".")
+getSrcFiles("./SourceFiles")
 add_library(DocFind ${srcFiles})
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)

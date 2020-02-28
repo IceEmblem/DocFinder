@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include "../DocFind/HeaderFiles/DocFinder.hpp"
+#include "../../DocFind/HeaderFiles/DocFinder.hpp"
 
 int main(){
     std::cout << "欢迎使用文档查找器" << std::endl;
