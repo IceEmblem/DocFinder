@@ -14,10 +14,10 @@ namespace DocFind
     }
 
     // 添加关键字到文档
-    void DocFinder::addKeyWordToDoc(std::vector<std::string> keys, Document doc) const 
+    void DocFinder::addKeyWordToDoc(std::vector<std::string> keys, std::shared_ptr<Document> doc) const 
     {
         for(auto key : keys){
-            _documentManager->addKeyWordToDoc(key, doc.relativePath);
+            _documentManager->addKeyWordToDoc(key, doc->relativePath);
         }
     }
 
@@ -46,18 +46,18 @@ namespace DocFind
         
         std::vector<FindResult> results;
         for(auto doc : docs){
-            FindResult result(*doc, "");
+            FindResult result(doc, "");
             results.push_back(result);
         }
 
         return results;
     }
 
-    void DocFinder::open(Document doc) const
+    void DocFinder::open(std::shared_ptr<Document> doc) const
     {
         static std::regex postfix("\\.(.+)$");
         std::smatch sresult;
-        if (std::regex_search(doc.name, sresult, postfix))
+        if (std::regex_search(doc->name, sresult, postfix))
         {
                 throw std::logic_error("文档不存在后缀，无法找到合适的程序用于打开文档");
         }
@@ -67,6 +67,6 @@ namespace DocFind
             throw std::logic_error("无法找到合适的程序用于打开文档");
         }
 
-        docOpener->open(_documentManager->getFullPath(&doc));
+        docOpener->open(_documentManager->getFullPath(doc));
     }
 } // namespace DocFind

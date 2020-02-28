@@ -52,5 +52,5 @@ TEST_F(DocFinderTest, FindTest)
     auto results = docFinder->find({ "DocFinderTestFile1" });
 
     EXPECT_EQ(results.size(), 1);
-    EXPECT_EQ(results[0].document.name, "Pre_DocFinderTestFile1.txt");
+    EXPECT_EQ(results[0].document->name, "Pre_DocFinderTestFile1.txt");
 }
