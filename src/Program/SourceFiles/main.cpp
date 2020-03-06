@@ -1,11 +1,14 @@
 #include <iostream>
 #include <string>
 #include "../HeaderFiles/CommandManager.hpp"
+#include "../HeaderFiles/CommandContext.hpp"
 
 int main(){
     std::cout << "欢迎使用文档查找器" << std::endl;
     std::cout << "该程序由 IceEmblem 所编写" << std::endl;
     std::cout << "输入 exit 退出程序" << std::endl;
+
+    CommandContext::init("./");
 
     CommandManager commandManager;
 

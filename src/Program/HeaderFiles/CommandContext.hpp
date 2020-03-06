@@ -4,6 +4,7 @@
 #include <map>
 #include <string>
 #include <memory>
+#include "../../DocFind/HeaderFiles/DocFinder.hpp"
 
 class CommandContext
 {
@@ -12,7 +13,10 @@ private:
 
     CommandContext() = default;
 public:
+    static void init(std::string dirPath);
     static std::shared_ptr<CommandContext> Instances();
+
+    std::shared_ptr<DocFind::DocFinder> docFinder = nullptr;
 
     std::shared_ptr<void> getData(std::string key);
 

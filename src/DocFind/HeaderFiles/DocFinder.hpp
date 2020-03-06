@@ -33,10 +33,8 @@ namespace DocFind
 
         std::shared_ptr<DocumentReaderFactory> _documentReaderFactory;
 
-        DocFinder(std::string dirPath);
-
     public:
-        static std::shared_ptr<DocFinder> Instances();
+        DocFinder(std::string dirPath);
 
         void addKeyWordToDoc(std::vector<std::string> keys, std::shared_ptr<Document> doc) const;
 

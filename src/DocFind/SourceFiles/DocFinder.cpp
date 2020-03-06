@@ -8,16 +8,6 @@
 
 namespace DocFind
 {
-    std::shared_ptr<DocFinder> DocFinder::Instances(){
-        static std::shared_ptr<DocFinder> docFinder = nullptr;
-
-        if(docFinder == nullptr){
-            docFinder.reset(new DocFinder("./"));
-        }
-
-        return docFinder;
-    }
-
     DocFinder::DocFinder(std::string dirPath) 
     {
         _documentManager =  std::make_shared<DocumentManager>(DocumentManager(dirPath));

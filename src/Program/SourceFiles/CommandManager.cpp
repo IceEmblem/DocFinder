@@ -4,6 +4,9 @@
 #include <algorithm>
 #include "../HeaderFiles/CommandManager.hpp"
 
+// 初始化私有静态变量
+std::vector<std::shared_ptr<Command>> CommandManager::_commands = std::vector<std::shared_ptr<Command>> ();
+
 void CommandManager::Register(std::shared_ptr<Command> command) {
     _commands.push_back(command);
 }

@@ -1,12 +1,13 @@
 #include "../HeaderFiles/CommandContext.hpp"
 
+static std::shared_ptr<CommandContext> commandContext = nullptr;
+
+void CommandContext::init(std::string dirPath){
+    commandContext = std::make_shared<CommandContext>(CommandContext());
+    commandContext->docFinder = std::make_shared<DocFind::DocFinder>(DocFind::DocFinder(dirPath));
+}
+
 std::shared_ptr<CommandContext> CommandContext::Instances(){
-    static std::shared_ptr<CommandContext> commandContext = nullptr;
-
-    if(commandContext == nullptr){
-        commandContext = std::make_shared<CommandContext>(CommandContext());
-    }
-
     return commandContext;
 }
 

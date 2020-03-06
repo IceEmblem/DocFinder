@@ -1,7 +1,6 @@
 #include <regex>
 #include <vector>
 #include <memory>
-#include "../../DocFind/HeaderFiles/DocFinder.hpp"
 #include "../HeaderFiles/Command.hpp"
 #include "../HeaderFiles/CommandManager.hpp"
 #include "../HeaderFiles/CommandContext.hpp"
@@ -31,7 +30,7 @@ public:
             return "输入关键字有误，请重新输入";
         }
 
-        auto results =DocFinder::Instances()->find(keys);
+        auto results =CommandContext::Instances()->docFinder->find(keys);
         if(results.size() == 0){
             return "未找到匹配的文档";
         }
