@@ -20,13 +20,6 @@ std::shared_ptr<Command> CommandManager::GetCommand(std::string commandName){
         }
     }
 
-    // 返回默认命令
-    for(auto command : _commands){
-        if(command->isDefault){
-            return command;
-        }
-    }
-
     return nullptr;
 }
 
@@ -42,7 +35,7 @@ std::string CommandManager::Exec(std::string cmdLine){
         param = sresult.str(2);
     }
     else {
-        throw std::logic_error("无效的命令");
+        return "无效的命令";
     }
 
     auto command = GetCommand(name);
@@ -50,7 +43,7 @@ std::string CommandManager::Exec(std::string cmdLine){
     std::string result;
 
     try{
-        result = command->exec(param, nextCmdLine);
+        result = command->exec(name, param, nextCmdLine);
     }
     catch(std::exception ex){
         return ex.what();
