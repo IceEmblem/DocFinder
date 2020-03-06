@@ -32,5 +32,5 @@ link_directories(${PROJECT_SOURCE_DIR}/test/GTestLib)
 add_executable(test "main.cpp" ${srcFiles})
 
 # 添加库依赖
-target_link_libraries(test gtest gtest_main DocFind)
+target_link_libraries(test gtest gtest_main ProgramTestLib DocFind)
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/test/bin)

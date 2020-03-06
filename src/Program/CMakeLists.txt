@@ -21,8 +21,12 @@ getSrcFiles("./SourceFiles")
 # 指定连接库的搜索目录
 link_directories(${PROJECT_SOURCE_DIR}/lib)
 
+# 添加一个可执行程序
 add_executable(main ${srcFiles})
-
 # 添加库依赖
 target_link_libraries(main DocFind)
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
+
+# 为了单元测试main需要生成一个库文件
+set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/test/lib)
+add_library(ProgramTestLib ${srcFiles})
+target_link_libraries(ProgramTestLib DocFind)
