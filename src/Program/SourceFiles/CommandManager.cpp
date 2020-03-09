@@ -5,7 +5,7 @@
 #include "../HeaderFiles/CommandManager.hpp"
 
 // 初始化私有静态变量
-std::vector<std::shared_ptr<Command>> CommandManager::_commands = std::vector<std::shared_ptr<Command>> ();
+std::vector<std::shared_ptr<Command>> CommandManager::_commands = std::vector<std::shared_ptr<Command>>();
 
 void CommandManager::Register(std::shared_ptr<Command> command) {
     _commands.push_back(command);
@@ -27,7 +27,7 @@ std::shared_ptr<Command> CommandManager::GetCommand(std::string commandName){
 }
 
 std::string CommandManager::Exec(std::string cmdLine){
-    static std::regex cmdRegex("^([^\\s]*?)\\s(.*?)");
+    static std::regex cmdRegex("^([^\\s]*)(\\s(.*))?");
     std::smatch sresult;
 
     std::string name;
@@ -35,13 +35,16 @@ std::string CommandManager::Exec(std::string cmdLine){
     if (std::regex_search(cmdLine, sresult, cmdRegex))
     {
         name = sresult.str(1);
-        param = sresult.str(2);
+        param = sresult.str(3);
     }
     else {
-        return "无效的命令";
+        return "无效的命令行";
     }
 
     auto command = GetCommand(name);
+    if(command == nullptr){
+        return std::string("不存在命令命令 ") + name;
+    }
     std::string nextCmdLine;
     std::string result;
 

@@ -16,7 +16,9 @@ private:
     std::string openOrReadDoc(std::string commandName, std::string paramStr, std::string & nextCmd);
 
 public:
-    std::vector<std::string> commandNames = { "find", "Find", "f", "F", "fo", "fr" };
+    FindCommand(){
+        commandNames = { "find", "Find", "f", "F", "fo", "fr" };
+    }
 
     std::string exec(std::string commandName, std::string paramStr, std::string & nextCmd);
 };
