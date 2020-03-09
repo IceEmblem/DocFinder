@@ -28,7 +28,12 @@ namespace DocFind
 
         for(auto doc : docs){
             for(auto docKey : doc->keys){
-                if(docKey.find(key) != docKey.npos){
+                // docKey 和 key 转小写
+                std::string docKeyLower = docKey;
+                std::string keyLower = key;
+                std::transform(docKey.begin(), docKey.end(), docKeyLower.begin(), ::tolower);
+                std::transform(key.begin(), key.end(), keyLower.begin(), ::tolower);
+                if(docKeyLower.find(keyLower) != docKeyLower.npos){
                     results.push_back(doc);
                 }
             }

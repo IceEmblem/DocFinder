@@ -26,6 +26,9 @@ public:
 
         ofstream file2(programDirPath+"/DocFinderTestDir/Pre_DocFinderTestFile2.txt", fstream::out);
         file2.close();
+
+        ofstream file3(programDirPath+"/DocFinderTestDir/测试文件3.txt", fstream::out);
+        file3.close();
     }
     
     // 最后一个测试用例结束后调用
@@ -53,4 +56,12 @@ TEST_F(DocFinderTest, FindTest)
 
     EXPECT_EQ(results.size(), 1);
     EXPECT_EQ(results[0].document->name, "Pre_DocFinderTestFile1.txt");
+
+    // 不区分大小写测试
+    results = docFinder->find({ "file1" });
+    EXPECT_EQ(results[0].document->name, "Pre_DocFinderTestFile1.txt");
+
+    // 中文测试
+    results = docFinder->find({ "文件3" });
+    EXPECT_EQ(results[0].document->name, "测试文件3.txt");
 }
