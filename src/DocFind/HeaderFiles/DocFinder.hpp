@@ -41,6 +41,8 @@ namespace DocFind
         std::vector<FindResult> find(std::vector<std::string> keys) const;
 
         void open(std::shared_ptr<Document> doc) const;
+
+        void open(std::string relativePath) const;
     };
 
 } // namespace DocFind

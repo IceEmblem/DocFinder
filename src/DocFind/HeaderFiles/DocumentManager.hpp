@@ -44,6 +44,7 @@ namespace DocFind
         // 获取文件完整路径
         std::string getFullPath(std::shared_ptr<DFFile> file);
         std::string getFullPath(DFFile* file);
+        std::string getFullPath(std::string relativePath);
     };
 } // namespace DocFind
 #endif

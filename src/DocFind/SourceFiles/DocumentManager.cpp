@@ -251,6 +251,10 @@ namespace DocFind
     }
 
     std::string DocumentManager::getFullPath(DFFile* file){
-        return _dirPath + file->relativePath;
+        return getFullPath(file->relativePath);
+    }
+
+    std::string DocumentManager::getFullPath(std::string relativePath){
+        return _dirPath + relativePath;
     }
 } // namespace DocFind

@@ -60,9 +60,14 @@ namespace DocFind
 
     void DocFinder::open(std::shared_ptr<Document> doc) const
     {
+        open(doc->relativePath);
+    }
+
+    void DocFinder::open(std::string relativePath) const
+    {
         static std::regex postfix("\\.(.+)$");
         std::smatch sresult;
-        if (std::regex_search(doc->name, sresult, postfix))
+        if (std::regex_search(relativePath, sresult, postfix))
         {
                 throw std::logic_error("文档不存在后缀，无法找到合适的程序用于打开文档");
         }
@@ -72,6 +77,6 @@ namespace DocFind
             throw std::logic_error("无法找到合适的程序用于打开文档");
         }
 
-        docOpener->open(_documentManager->getFullPath(doc));
+        docOpener->open(_documentManager->getFullPath(relativePath));
     }
 } // namespace DocFind
