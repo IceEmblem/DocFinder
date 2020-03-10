@@ -34,7 +34,8 @@ class CommandManagerTest : public testing::Test {
 public:
     static void SetUpTestCase()
     {
-        CommandManagerRegister(CommandTestClass);
+        CommandManager::RegisterBuiltInCommands();
+        CommandManager::Register(std::make_shared<CommandTestClass>());
         commandManager = new CommandManager();
     }
     

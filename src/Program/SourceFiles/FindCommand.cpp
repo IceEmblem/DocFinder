@@ -84,5 +84,3 @@ std::string FindCommand::exec (std::string commandName, std::string paramStr, st
         return openOrReadDoc (commandName, paramStr, nextCmd);
     }
 };
-
-CommandManagerRegister(FindCommand);

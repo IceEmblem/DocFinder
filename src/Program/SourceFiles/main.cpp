@@ -5,6 +5,8 @@
 #include "../HeaderFiles/CommandContext.hpp"
 
 int main(int argc, char * argv[]){
+    // 设置控制台的编码为 utf-8
+    system("chcp 65001");
     std::cout << "欢迎使用文档查找器" << std::endl;
     std::cout << "该程序由 IceEmblem 所编写" << std::endl;
     std::cout << "输入 exit 退出程序" << std::endl;
@@ -27,7 +29,7 @@ int main(int argc, char * argv[]){
     }
 
     CommandContext::init(programPath);
-
+    CommandManager::RegisterBuiltInCommands();
     CommandManager commandManager;
 
     while (true)

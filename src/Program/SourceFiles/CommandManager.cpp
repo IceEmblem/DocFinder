@@ -3,12 +3,19 @@
 #include <regex>
 #include <algorithm>
 #include "../HeaderFiles/CommandManager.hpp"
+#include "../HeaderFiles/FindCommand.hpp"
 
 // 初始化私有静态变量
 std::vector<std::shared_ptr<Command>> CommandManager::_commands = std::vector<std::shared_ptr<Command>>();
 
 void CommandManager::Register(std::shared_ptr<Command> command) {
     _commands.push_back(command);
+}
+
+void CommandManager::RegisterBuiltInCommands(){
+    _commands = std::vector<std::shared_ptr<Command>>();
+
+    Register(std::make_shared<FindCommand>());
 }
 
 std::shared_ptr<Command> CommandManager::GetCommand(std::string commandName){

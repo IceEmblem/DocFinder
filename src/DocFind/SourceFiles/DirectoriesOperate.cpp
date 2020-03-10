@@ -17,6 +17,9 @@ namespace DocFind
         HANDLE hFind = FindFirstFile(szPath.c_str(), &wfd) ;
         do
         {
+            if(std::string(wfd.cFileName) == "." || std::string(wfd.cFileName) == ".."){
+                continue;
+            }
             files[wfd.cFileName] = wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY;
         } while (FindNextFile(hFind, &wfd));
         FindClose(hFind);
@@ -54,7 +57,17 @@ namespace DocFind
 {
     bool DirectoriesOperate::createDir(std::string dirPath)
     {
-        std::string command = "mkdir -p " + dirPath;  
+        #ifdef _WIN32
+            // 替换字符串中的 "/" 为 "\"
+            int pos;
+            pos = dirPath.find("/");
+            while(pos != -1){
+                dirPath.replace(pos, 1, "\\");
+                pos = dirPath.find("/");
+            }
+        #endif
+
+        std::string command = "mkdir \"" + dirPath + "\"";  
         system(command.c_str());
     }
 
