@@ -7,4 +7,7 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 
 add_subdirectory("src/DocFind")
 add_subdirectory("src/Program")
-add_subdirectory(test)
+# 只有在 linux 下才生成测试项目
+if(${UNIX})
+    add_subdirectory(test)
+endif(${UNIX})

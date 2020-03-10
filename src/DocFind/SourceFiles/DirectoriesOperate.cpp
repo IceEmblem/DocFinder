@@ -3,21 +3,21 @@
 #include <regex>
 #include "../HeaderFiles/DirectoriesOperate.hpp"
 
-#ifdef WIN32
+#ifdef _WIN32
 // windows
 #include <WINDOWS.H>
 namespace DocFind
 {
     std::map<std::string, bool> DirectoriesOperate::getFiles(std::string dirPath)
     {
-        string szPath = dirPath + "/*.*";
+        std::string szPath = dirPath + "/*.*";
         WIN32_FIND_DATA wfd;
         std::map<std::string, bool> files;
 
         HANDLE hFind = FindFirstFile(szPath.c_str(), &wfd) ;
         do
         {
-            files[wfd.cFileName] = false;
+            files[wfd.cFileName] = wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY;
         } while (FindNextFile(hFind, &wfd));
         FindClose(hFind);
 

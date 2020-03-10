@@ -36,3 +36,4 @@ CMakeCache.txt
 CMakeFiles/
 bin/
 lib/
+build/

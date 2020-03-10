@@ -8,12 +8,12 @@
             // 任务的类型
             "type": "shell",
             // 执行的命令
-            "command": "cmake -DCMAKE_BUILD_TYPE=Debug .; make;"
+            "command": "cmake -G \"Unix Makefiles\" -DCMAKE_BUILD_TYPE=Debug .; make;"
         },
         {
             "label": "release",
             "type": "shell",
-            "command": "cmake -DCMAKE_BUILD_TYPE=Release .; make;"
+            "command": "cmake -G \"Unix Makefiles\" -DCMAKE_BUILD_TYPE=Release .; make;"
         }
     ]
 }

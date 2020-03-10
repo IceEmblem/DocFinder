@@ -17,9 +17,13 @@
             "cwd": "${workspaceFolder}",
             "environment": [],
             // 调试时是否显示控制台窗口
-            "externalConsole": false,
+            "externalConsole": true,
             // 调试器
             "MIMode": "gdb",
+            // 设置 window 下调试器的路径
+            "windows": {
+                "miDebuggerPath": "gdb.exe" // 调试器的路径，修改为你的安装路径
+            },
             "setupCommands": [
                 {
                     "description": "为 gdb 启用整齐打印",
@@ -39,8 +43,12 @@
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
-            "externalConsole": false,
+            "externalConsole": true,
             "MIMode": "gdb",
+            // 设置 window 下调试器的路径
+            "windows": {
+                "miDebuggerPath": "gdb.exe" // 调试器的路径，修改为你的安装路径
+            },
             "setupCommands": [
                 {
                     "description": "为 gdb 启用整齐打印",
@@ -59,8 +67,12 @@
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
-            "externalConsole": false,
+            "externalConsole": true,
             "MIMode": "gdb",
+            // 设置 window 下调试器的路径
+            "windows": {
+                "miDebuggerPath": "gdb.exe" // 调试器的路径，修改为你的安装路径
+            },
             "setupCommands": [
                 {
                     "description": "为 gdb 启用整齐打印",
