@@ -47,7 +47,7 @@ namespace DocFind
         // 获取 文档打开器
         std::shared_ptr<DocumentOpener> getDocumentOpener(std::string docPostfix) const;
 
-        OpenResult open(std::string execPath);
+        OpenResult open(std::string docPath);
     };    
 } // namespace DocFind
 #endif

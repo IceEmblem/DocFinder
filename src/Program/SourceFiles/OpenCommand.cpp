@@ -24,7 +24,7 @@ std::string OpenCommand::open(std::string paramStr){
     return "";
 }
 
-std::string rgt(std::string paramStr, std::string & nextCmd){
+std::string OpenCommand::rgt(std::string paramStr, std::string & nextCmd){
     auto execName = std::static_pointer_cast<std::string>(CommandContext::Instances()->getData(commandContextDataKey));
     nextCmd = "register " + *execName + " " + paramStr;
     return "";
