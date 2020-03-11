@@ -21,6 +21,10 @@ std::string OpenCommand::open(std::string paramStr){
         return output.str();
     }
 
+    if(result.result == DocFind::OpenResultEnum::nonExistOpener){
+        return "无法打开该文档";
+    }
+
     return "";
 }
 

@@ -9,7 +9,8 @@ namespace DocFind
 {
     enum class OpenResultEnum{
         success,
-        unregisteredExecPath
+        unregisteredExecPath,
+        nonExistOpener
     };
 
     class OpenResult{

@@ -67,7 +67,7 @@ std::string CommandManager::Exec(std::string cmdLine){
     try{
         result = command->exec(name, param, nextCmdLine);
     }
-    catch(std::exception ex){
+    catch(std::exception& ex){
         return ex.what();
     }
 

@@ -50,7 +50,7 @@ std::string FindCommand::openOrReadDoc (std::string commandName, std::string par
     int inputNo = 0;
     try {
         inputNo = std::stoi (paramStr);
-    } catch (std::exception) {
+    } catch (std::exception& ex) {
         return "无效的编号";
     }
 

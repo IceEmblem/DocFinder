@@ -63,7 +63,7 @@ TEST_F(DocumentOpenerFactoryTest, baseTest)
         DocumentOpenerFactory::Register(std::make_shared<DocumentOpenerTestClass>());
         EXPECT_EQ(true, false);
     }
-    catch(std::logic_error){
+    catch(std::logic_error& ex){
         EXPECT_EQ(true, true);
     }
 
@@ -83,4 +83,8 @@ TEST_F(DocumentOpenerFactoryTest, baseTest)
     newDocumentOpenerFactory.open("./file.testDocPostfix");
     EXPECT_EQ(testDocPath, "./file.testDocPostfix");
     EXPECT_EQ(testExecPath, "testExecPath");
+
+    // 测试 open 方法，没有未知后缀情况下
+    auto result = newDocumentOpenerFactory.open("./file.llllll");
+    EXPECT_EQ(result.result, OpenResultEnum::nonExistOpener);
 }

@@ -111,7 +111,7 @@ namespace DocFind
 
         std::shared_ptr<DocumentOpener> docOpener = getDocumentOpener(sresult.str(1));
         if(!docOpener){
-            throw std::logic_error("无法找到合适的程序用于打开文档");
+            return OpenResult(OpenResultEnum::nonExistOpener, "");
         }
 
         std::string execPath = _execPaths[docOpener->getExecName()];
