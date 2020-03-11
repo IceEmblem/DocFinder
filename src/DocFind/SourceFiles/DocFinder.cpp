@@ -59,14 +59,14 @@ namespace DocFind
         return results;
     }
 
-    void DocFinder::open(std::shared_ptr<Document> doc) const
+    OpenResult DocFinder::open(std::shared_ptr<Document> doc) const
     {
-        open(doc->relativePath);
+        return open(doc->relativePath);
     }
 
-    void DocFinder::open(std::string relativePath) const
+    OpenResult DocFinder::open(std::string relativePath) const
     {
-        _documentOpenerFactory->open(_documentManager->getFullPath(relativePath));
+        return _documentOpenerFactory->open(_documentManager->getFullPath(relativePath));
     }
 
     void DocFinder::registerExecPath(std::string execName, std::string execPath){

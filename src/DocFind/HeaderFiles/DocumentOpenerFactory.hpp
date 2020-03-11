@@ -7,6 +7,18 @@
 
 namespace DocFind
 {
+    enum class OpenResultEnum{
+        success,
+        unregisteredExecPath
+    };
+
+    class OpenResult{
+    public:
+        OpenResult(OpenResultEnum result, std::string execName):result(result), execName(execName){}
+        OpenResultEnum result;
+        std::string execName;
+    };
+
     class DocumentOpenerFactory
     {
     private:
@@ -33,7 +45,7 @@ namespace DocFind
         // 获取 文档打开器
         std::shared_ptr<DocumentOpener> getDocumentOpener(std::string docPostfix) const;
 
-        void open(std::string execPath);
+        OpenResult open(std::string execPath);
     };    
 } // namespace DocFind
 #endif

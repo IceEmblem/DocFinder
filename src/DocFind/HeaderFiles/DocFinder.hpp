@@ -40,9 +40,9 @@ namespace DocFind
 
         std::vector<FindResult> find(std::vector<std::string> keys) const;
 
-        void open(std::shared_ptr<Document> doc) const;
+        OpenResult open(std::shared_ptr<Document> doc) const;
 
-        void open(std::string relativePath) const;
+        OpenResult open(std::string relativePath) const;
 
         void registerExecPath(std::string execName, std::string execPath);
     };

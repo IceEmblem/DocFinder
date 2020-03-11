@@ -84,19 +84,25 @@ namespace DocFind
         return nullptr;
     }
 
-    void DocumentOpenerFactory::open(std::string execPath){
+    OpenResult DocumentOpenerFactory::open(std::string execPath){
         static std::regex postfix("\\.(.+)$");
         std::smatch sresult;
         if (std::regex_search(execPath, sresult, postfix))
         {
-                throw std::logic_error("文档不存在后缀，无法找到合适的程序用于打开文档");
+            throw std::logic_error("文档不存在后缀，无法找到合适的程序用于打开文档");
         }
 
-       std::shared_ptr<DocumentOpener> docOpener = getDocumentOpener(sresult.str(1));
+        std::shared_ptr<DocumentOpener> docOpener = getDocumentOpener(sresult.str(1));
         if(!docOpener){
             throw std::logic_error("无法找到合适的程序用于打开文档");
         }
 
-        docOpener->open(execPath, _execPaths[docOpener->getExecName()]);
+        std::string execPath = _execPaths[docOpener->getExecName()];
+        if(execPath == ""){
+            return OpenResult(OpenResultEnum::unregisteredExecPath, docOpener->getExecName());
+        }
+
+        docOpener->open(execPath, execPath);
+        return OpenResult(OpenResultEnum::success, docOpener->getExecName());
     }
 } // namespace DocFind
