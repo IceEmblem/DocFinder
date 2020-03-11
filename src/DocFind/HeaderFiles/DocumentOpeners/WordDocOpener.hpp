@@ -16,7 +16,7 @@ namespace DocFind
             return execName;
         }
         bool isCanOpen(std::string docPostfix) const;
-        void open(std::string docPath) const;
+        void open(std::string docPath, std::string execPath) const;
     };
 }
 

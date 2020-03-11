@@ -5,6 +5,7 @@
 #include <regex>
 #include "../HeaderFiles/DocumentOpenerFactory.hpp"
 #include "../HeaderFiles/DirectoriesOperate.hpp"
+#include "../HeaderFiles/DocumentOpeners/WordDocOpener.hpp"
 
 namespace DocFind
 {
@@ -64,9 +65,13 @@ namespace DocFind
         readExecPathFromFile();
     }
 
-    template<typename TDocumentOpener>
-    void DocumentOpenerFactory::Register(TDocumentOpener* opener){
-        openers.push_back(std::make_shared<DocumentOpener>(*opener));
+    void DocumentOpenerFactory::Register(std::shared_ptr<DocumentOpener> opener){
+        openers.push_back(opener);
+    }
+
+    // 注册内置的文档打开器
+    void DocumentOpenerFactory::RegisterBuiltInOpener(){
+        Register(std::make_shared<WordDocOpener>());
     }
 
     void DocumentOpenerFactory::registerExecPath(std::string execName, std::string execPath){

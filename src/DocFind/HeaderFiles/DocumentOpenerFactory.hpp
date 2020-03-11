@@ -33,11 +33,13 @@ namespace DocFind
         void writeFileFromExecPath();
     public:
         DocumentOpenerFactory(std::string current);
-        // 注册 文档打开器，TDocumentOpener必须继承DocumentOpener
-        template<typename TDocumentOpener>
 
+        // 注册 文档打开器，TDocumentOpener必须继承DocumentOpener
         // 注册打开器
-        static void Register(TDocumentOpener* opener);
+        static void Register(std::shared_ptr<DocumentOpener> opener);
+
+        // 注册内置的文档打开器
+        static void RegisterBuiltInOpener();
         
         // 注册可执行程序路径
         void registerExecPath(std::string execName, std::string execPath);

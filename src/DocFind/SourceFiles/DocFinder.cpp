@@ -11,6 +11,8 @@ namespace DocFind
     DocFinder::DocFinder(std::string dirPath) 
     {
         _documentManager =  std::make_shared<DocumentManager>(DocumentManager(dirPath));
+        
+        DocumentOpenerFactory::RegisterBuiltInOpener();
         _documentOpenerFactory = std::make_shared<DocumentOpenerFactory>(DocumentOpenerFactory(dirPath));
     }
 

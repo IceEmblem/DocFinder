@@ -4,6 +4,8 @@
 #include <algorithm>
 #include "../HeaderFiles/CommandManager.hpp"
 #include "../HeaderFiles/FindCommand.hpp"
+#include "../HeaderFiles/OpenCommand.hpp"
+#include "../HeaderFiles/RegisterCommand.hpp"
 
 // 初始化私有静态变量
 std::vector<std::shared_ptr<Command>> CommandManager::_commands = std::vector<std::shared_ptr<Command>>();
@@ -16,6 +18,8 @@ void CommandManager::RegisterBuiltInCommands(){
     _commands = std::vector<std::shared_ptr<Command>>();
 
     Register(std::make_shared<FindCommand>());
+    Register(std::make_shared<OpenCommand>());
+    Register(std::make_shared<RegisterCommand>());
 }
 
 std::shared_ptr<Command> CommandManager::GetCommand(std::string commandName){
