@@ -11,6 +11,10 @@ namespace DocFind
     private:
         /* data */
     public:
+        std::string getExecName() const{
+            static std::string execName = "WordDoc";
+            return execName;
+        }
         bool isCanOpen(std::string docPostfix) const;
         void open(std::string docPath) const;
     };

@@ -43,6 +43,8 @@ namespace DocFind
         void open(std::shared_ptr<Document> doc) const;
 
         void open(std::string relativePath) const;
+
+        void registerExecPath(std::string execName, std::string execPath);
     };
 
 } // namespace DocFind

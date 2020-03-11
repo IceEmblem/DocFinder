@@ -11,6 +11,7 @@ namespace DocFind
     DocFinder::DocFinder(std::string dirPath) 
     {
         _documentManager =  std::make_shared<DocumentManager>(DocumentManager(dirPath));
+        _documentOpenerFactory = std::make_shared<DocumentOpenerFactory>(DocumentOpenerFactory(dirPath));
     }
 
     // 添加关键字到文档
@@ -65,18 +66,10 @@ namespace DocFind
 
     void DocFinder::open(std::string relativePath) const
     {
-        static std::regex postfix("\\.(.+)$");
-        std::smatch sresult;
-        if (std::regex_search(relativePath, sresult, postfix))
-        {
-                throw std::logic_error("文档不存在后缀，无法找到合适的程序用于打开文档");
-        }
+        _documentOpenerFactory->open(_documentManager->getFullPath(relativePath));
+    }
 
-       std::shared_ptr<DocumentOpener> docOpener = _documentOpenerFactory->getDocumentOpener(sresult.str(1));
-        if(!docOpener){
-            throw std::logic_error("无法找到合适的程序用于打开文档");
-        }
-
-        docOpener->open(_documentManager->getFullPath(relativePath));
+    void DocFinder::registerExecPath(std::string execName, std::string execPath){
+        _documentOpenerFactory->registerExecPath(execName, execPath);
     }
 } // namespace DocFind
