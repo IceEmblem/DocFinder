@@ -15,11 +15,16 @@ void CommandManager::Register(std::shared_ptr<Command> command) {
 }
 
 void CommandManager::RegisterBuiltInCommands(){
-    _commands = std::vector<std::shared_ptr<Command>>();
+    static bool isRegistered = false;
+    if(isRegistered == true){
+        return;
+    }
 
     Register(std::make_shared<FindCommand>());
     Register(std::make_shared<OpenCommand>());
     Register(std::make_shared<RegisterCommand>());
+
+    isRegistered = true;
 }
 
 std::shared_ptr<Command> CommandManager::GetCommand(std::string commandName){

@@ -66,12 +66,24 @@ namespace DocFind
     }
 
     void DocumentOpenerFactory::Register(std::shared_ptr<DocumentOpener> opener){
+        for(auto oldOpener : openers){
+            if(oldOpener->getExecName() == opener->getExecName()){
+                throw std::logic_error("试图注册2个相同名称的打开器");
+            }
+        }
         openers.push_back(opener);
     }
 
     // 注册内置的文档打开器
     void DocumentOpenerFactory::RegisterBuiltInOpener(){
+        static bool isRegistered = false;
+        if(isRegistered == true){
+            return;
+        }
+        
         Register(std::make_shared<WordDocOpener>());
+
+        isRegistered = true;
     }
 
     void DocumentOpenerFactory::registerExecPath(std::string execName, std::string execPath){
