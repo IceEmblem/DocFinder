@@ -9,7 +9,7 @@ int main(int argc, char * argv[]){
     system("chcp 65001");
     std::cout << "欢迎使用文档查找器" << std::endl;
     std::cout << "该程序由 IceEmblem 所编写" << std::endl;
-    std::cout << "输入 exit 退出程序" << std::endl;
+    std::cout << "输入 exit 退出程序" << std::endl << std::endl;
 
     std::string programPath;
     if(argc > 0){
@@ -34,6 +34,7 @@ int main(int argc, char * argv[]){
 
     while (true)
     {
+        std::cout << "> ";
         std::string cmdLine;
         getline(std::cin, cmdLine);
 
@@ -41,7 +42,9 @@ int main(int argc, char * argv[]){
             return 0;
         }
 
+        std::cout << ">>>>>>开始执行>>>>>>" << std::endl << std::endl;
         std::cout << commandManager.Exec(cmdLine) << std::endl;
+        std::cout << std::endl << "<<<<<<结束执行<<<<<<" << std::endl;
     }
 
     return 0;

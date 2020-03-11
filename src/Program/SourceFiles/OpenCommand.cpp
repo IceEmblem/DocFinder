@@ -22,7 +22,7 @@ std::string OpenCommand::open(std::string paramStr){
     }
 
     if(result.result == DocFind::OpenResultEnum::nonExistOpener){
-        return "无法打开该文档";
+        return "暂不支持打开该类型文档";
     }
 
     return "";
