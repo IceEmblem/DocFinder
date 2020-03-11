@@ -6,9 +6,12 @@
 class OpenCommand : public Command
 {
 private:
+    std::string open(std::string paramStr);
+
+    std::string rgt(std::string paramStr, std::string & nextCmd);
 public:
     OpenCommand(){
-        commandNames = {"Open", "open"};
+        commandNames = {"Open", "open", "rgt"};
     }
 
     std::string exec(std::string command, std::string paramStr, std::string & nextCmd);
