@@ -45,7 +45,7 @@ namespace DocFind
             std::string execPath;
             lineStringStram >> execPath;
 
-            _execPaths[execName].push_back(ExecPath(execPath, FileOperate::isExistFile(execPath)));
+            _execPaths[execName].push_back(ExecPath(execPath, FileOperate::isExistExecFile(execPath)));
         }
 
         file.close();
@@ -98,7 +98,7 @@ namespace DocFind
         }
 
         if(!isExist){
-            _execPaths[execName].push_back(ExecPath(execPath, FileOperate::isExistFile(execPath)));
+            _execPaths[execName].push_back(ExecPath(execPath, FileOperate::isExistExecFile(execPath)));
         }
         writeFileFromExecPath();
     }

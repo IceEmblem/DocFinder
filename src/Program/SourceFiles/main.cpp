@@ -34,9 +34,9 @@ int main(int argc, char * argv[]){
             return 0;
         }
 
-        std::cout << ">>>>>>开始执行>>>>>>" << std::endl << std::endl;
+        std::cout << "--------开始执行--------" << std::endl << std::endl;
         std::cout << commandManager.Exec(cmdLine) << std::endl;
-        std::cout << std::endl << "<<<<<<结束执行<<<<<<" << std::endl;
+        std::cout << std::endl << "--------结束执行--------" << std::endl;
     }
 
     return 0;

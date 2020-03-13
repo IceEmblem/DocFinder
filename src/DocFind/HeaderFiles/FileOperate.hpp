@@ -13,6 +13,9 @@ namespace DocFind {
         // 判断文件是否存在
         static bool isExistFile(std::string path);
 
+        // 是否存在可执行文件（会查找环境路径）
+        static bool isExistExecFile(std::string path);
+
         // 创建文件
         static void createFile(std::string path);
 
