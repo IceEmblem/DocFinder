@@ -53,10 +53,24 @@ namespace DocFind
 }
 #endif
 
+#ifdef _WIN32
+#include <io.h>
+#else
+#include <unistd.h>
+#endif
+
 namespace DocFind
 {
-    bool DirectoriesOperate::createDir(std::string dirPath)
+    bool DirectoriesOperate::isExitDir(std::string dirPath){
+        return access(dirPath.c_str(), F_OK) == 0;
+    }
+
+    void DirectoriesOperate::createDir(std::string dirPath)
     {
+        if(isExitDir(dirPath)){
+            return;
+        }
+        
         #ifdef _WIN32
             // 替换字符串中的 "/" 为 "\"
             int pos;
