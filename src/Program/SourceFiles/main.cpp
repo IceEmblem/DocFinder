@@ -3,6 +3,7 @@
 #include <regex>
 #include "../HeaderFiles/CommandManager.hpp"
 #include "../HeaderFiles/CommandContext.hpp"
+#include "../../DocFind/HeaderFiles/FileOperate.hpp"
 
 int main(int argc, char * argv[]){
     // 设置控制台的编码为 utf-8
@@ -13,16 +14,7 @@ int main(int argc, char * argv[]){
 
     std::string programPath;
     if(argc > 0){
-        static std::regex pathRegex("^(.*?)(\\\\|/)([^\\\\/]*?)$");
-        std::smatch result;
-
-        std::string arg = std::string(argv[0]);
-        if(!std::regex_search(arg, result, pathRegex)){
-            std::cout << "错误：无法找到程序路径" << std::endl;
-            return -1;
-        }
-
-        programPath = result.str(1);
+        programPath = DocFind::FileOperate::getFileDirPath(argv[0]);
     }
     else{
         programPath = "./";

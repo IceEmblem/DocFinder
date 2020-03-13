@@ -4,7 +4,7 @@
 #include "../DocumentOpener.hpp"
 
 namespace DocFind {
-    class TxtOpener
+    class TxtOpener : public DocumentOpener
     {
     private:
         /* data */

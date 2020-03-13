@@ -1,6 +1,5 @@
 #include <vector>
 #include <memory>
-#include <regex>
 #include "../HeaderFiles/DocumentManager.hpp"
 #include "../HeaderFiles/DocFinder.hpp"
 #include "../HeaderFiles/DFFile.hpp"

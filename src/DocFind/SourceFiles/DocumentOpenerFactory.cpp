@@ -6,6 +6,7 @@
 #include "../HeaderFiles/DocumentOpenerFactory.hpp"
 #include "../HeaderFiles/DirectoriesOperate.hpp"
 #include "../HeaderFiles/DocumentOpeners/WordDocOpener.hpp"
+#include "../HeaderFiles/DocumentOpeners/TxtOpener.hpp"
 #include "../HeaderFiles/FileOperate.hpp"
 
 namespace DocFind
@@ -83,7 +84,7 @@ namespace DocFind
         }
         
         Register(std::make_shared<WordDocOpener>());
-
+        Register(std::make_shared<TxtOpener>());
         isRegistered = true;
     }
 
@@ -113,14 +114,13 @@ namespace DocFind
     }
 
     OpenResult DocumentOpenerFactory::open(std::string docPath){
-        static std::regex postfix("\\.([^\\.]+)$");
-        std::smatch sresult;
-        if (!std::regex_search(docPath, sresult, postfix))
+        std::string postfix = FileOperate::getPostfix(docPath);
+        if(postfix == "")
         {
             throw std::logic_error("文档不存在后缀，无法找到合适的程序用于打开文档");
         }
 
-        std::shared_ptr<DocumentOpener> docOpener = getDocumentOpener(sresult.str(1));
+        std::shared_ptr<DocumentOpener> docOpener = getDocumentOpener(postfix);
         if(!docOpener){
             return OpenResult(OpenResultEnum::nonExistOpener, "");
         }

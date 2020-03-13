@@ -20,4 +20,5 @@ std::string RegisterCommand::exec(std::string command, std::string paramStr, std
     }
 
     CommandContext::Instances()->docFinder->registerExecPath(execName, execPath);
+    return "以注册程序路径：" + execPath;
 }
