@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <fstream>
 #include "../../../src/DocFind/HeaderFiles/DocumentOpenerFactory.hpp"
 #include "../../../src/DocFind/HeaderFiles/DirectoriesOperate.hpp"
 
@@ -28,6 +29,7 @@ public:
 };
 
 static std::string programDirPath = "./test/bin/DocumentOpenerFactoryTestDir";
+static std::string execPath = programDirPath + "/testExecPath";
 
 class DocumentOpenerFactoryTest : public testing::Test{
 public:
@@ -35,6 +37,8 @@ public:
     static void SetUpTestCase()
     {
         DirectoriesOperate::createDir(programDirPath);
+        std::ofstream execFile;
+        execFile.open(execPath);
         DocumentOpenerFactory::RegisterBuiltInOpener();
     }
     
@@ -73,16 +77,14 @@ TEST_F(DocumentOpenerFactoryTest, baseTest)
     EXPECT_EQ(opener->getExecName(), "testExecName");
 
     // 测试 registerExecPath 方法
-    documentOpenerFactory.registerExecPath("testExecName", "testExecPath1");
-    // 重复注册使用后者
-    documentOpenerFactory.registerExecPath("testExecName", "testExecPath");
+    documentOpenerFactory.registerExecPath("testExecName", execPath);
     // 对于注册执行路径，新建类一样有效
     DocumentOpenerFactory newDocumentOpenerFactory(programDirPath);
 
     // 测试 open 方法
     newDocumentOpenerFactory.open("./file.testDocPostfix");
     EXPECT_EQ(testDocPath, "./file.testDocPostfix");
-    EXPECT_EQ(testExecPath, "testExecPath");
+    EXPECT_EQ(testExecPath, execPath);
 
     // 测试 open 方法，没有未知后缀情况下
     auto result = newDocumentOpenerFactory.open("./file.llllll");

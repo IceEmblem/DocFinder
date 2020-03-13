@@ -7,6 +7,13 @@
 
 namespace DocFind
 {
+    class ExecPath {
+    public:
+        ExecPath(std::string path, bool isExist):path(path), isExist(isExist){}
+        std::string path;
+        bool isExist;
+    };
+
     enum class OpenResultEnum{
         success,
         unregisteredExecPath,
@@ -26,7 +33,7 @@ namespace DocFind
         // 当前程序的执行目录
         std::string _currentPath;
         // 可执行程序路径列表
-        std::map<std::string, std::string> _execPaths;
+        std::map<std::string, std::vector<ExecPath>> _execPaths;
 
         // 从文件中读取可执行程序路径
         void readExecPathFromFile();

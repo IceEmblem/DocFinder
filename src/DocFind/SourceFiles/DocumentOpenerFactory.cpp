@@ -14,6 +14,12 @@ namespace DocFind
     // 可执行程序路径文件相对路径
     static std::string execPathFileRelativePath = "/DocFinder/ExecPath.txt";
 
+    // 判断文件是否存在
+    static bool isExistFile(std::string path){
+        std::ifstream f(path);
+        return f.good();
+    }
+
     void DocumentOpenerFactory::readExecPathFromFile(){
         std::string execPathFilePath = _currentPath + execPathFileRelativePath;
         std::ifstream file;
@@ -45,7 +51,7 @@ namespace DocFind
             std::string execPath;
             lineStringStram >> execPath;
 
-            _execPaths[execName] = execPath;
+            _execPaths[execName].push_back(ExecPath(execPath, isExistFile(execPath)));
         }
 
         file.close();
@@ -57,7 +63,9 @@ namespace DocFind
         file.open(execPathFilePath);
 
         for(auto execPath:_execPaths){
-            file << execPath.first << " " << execPath.second << std::endl;
+            for(auto path : execPath.second){
+                file << execPath.first << " " << path.path << std::endl;
+            }
         }
     }
 
@@ -87,7 +95,17 @@ namespace DocFind
     }
 
     void DocumentOpenerFactory::registerExecPath(std::string execName, std::string execPath){
-        _execPaths[execName] = execPath;
+        bool isExist = false;
+        for(auto oldExecPath : _execPaths[execName]){
+            if(oldExecPath.path == execPath){
+                isExist = true;
+                break;
+            }
+        }
+
+        if(!isExist){
+            _execPaths[execName].push_back(ExecPath(execPath, isExistFile(execPath)));
+        }
         writeFileFromExecPath();
     }
 
@@ -114,12 +132,20 @@ namespace DocFind
             return OpenResult(OpenResultEnum::nonExistOpener, "");
         }
 
-        std::string execPath = _execPaths[docOpener->getExecName()];
-        if(execPath == ""){
+        auto execPaths = _execPaths[docOpener->getExecName()];
+        std::string inputExecPath;
+        for(auto execPath : execPaths){
+            if(execPath.isExist == true){
+                inputExecPath = execPath.path;
+                break;
+            }
+        }
+
+        if(inputExecPath == ""){
             return OpenResult(OpenResultEnum::unregisteredExecPath, docOpener->getExecName());
         }
 
-        docOpener->open(docPath, execPath);
+        docOpener->open(docPath, inputExecPath);
         return OpenResult(OpenResultEnum::success, docOpener->getExecName());
     }
 } // namespace DocFind
