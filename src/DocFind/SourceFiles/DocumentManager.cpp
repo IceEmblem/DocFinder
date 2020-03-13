@@ -132,27 +132,41 @@ namespace DocFind
 
     std::shared_ptr<Directories> DocumentManager::createDirectories(std::string relativePath, std::vector<std::string> keys)
     {
-            auto childFiles = DirectoriesOperate::getFiles(_dirPath + relativePath);
-            std::vector<std::shared_ptr<DFFile>> childs;
+        std::map<std::string, bool> childFiles;
+        try{
+            childFiles = DirectoriesOperate::getFiles(_dirPath + relativePath);
+        }
+        catch(std::exception&)
+        {
+            return nullptr;
+        }
+        std::vector<std::shared_ptr<DFFile>> childs;
 
-            for(auto childFile : childFiles){
-                std::vector<std::string> childKeys = keys;
-                childKeys.push_back(childFile.first);
+        for(auto childFile : childFiles){
+            // 一个 zz 的 bug，对与很奇葩的目录字符（如：ﾒﾀﾀｵjar），子文件的 name 会为空
+            if(childFile.first == ""){
+                continue;
+            }
+            std::vector<std::string> childKeys = keys;
+            childKeys.push_back(childFile.first);
 
-                if(childFile.second == true){
-                    childs.push_back(createDirectories(relativePath + "/" + childFile.first, childKeys));
-                }
-                else{
-                    childs.push_back(std::make_shared<Document>(Document(relativePath + "/" + childFile.first, childKeys)));
+            if(childFile.second == true){
+                auto pt = createDirectories(relativePath + "/" + childFile.first, childKeys);
+                if(pt != nullptr){
+                    childs.push_back(pt);
                 }
             }
+            else{
+                childs.push_back(std::make_shared<Document>(Document(relativePath + "/" + childFile.first, childKeys)));
+            }
+        }
 
-            // 对子文件进行排序
-            std::sort(childs.begin(), childs.end(), [](std::shared_ptr<DFFile>  left, std::shared_ptr<DFFile>  right){
-                return right->relativePath.compare(left->relativePath) > 0 ? true : false;
-            });
+        // 对子文件进行排序
+        std::sort(childs.begin(), childs.end(), [](std::shared_ptr<DFFile>  left, std::shared_ptr<DFFile>  right){
+            return right->relativePath.compare(left->relativePath) > 0 ? true : false;
+        });
 
-            return std::make_shared<Directories>(Directories(relativePath, keys, childs));
+        return std::make_shared<Directories>(Directories(relativePath, keys, childs));
     }
     
     // 将KeyWordToDoc写入到文件
