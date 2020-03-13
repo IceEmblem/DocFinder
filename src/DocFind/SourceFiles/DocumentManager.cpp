@@ -3,6 +3,7 @@
 #include <fstream>
 #include "../HeaderFiles/DocumentManager.hpp"
 #include "../HeaderFiles/Directories.hpp"
+#include "../HeaderFiles/FileOperate.hpp"
 
 namespace DocFind
 {
@@ -94,9 +95,7 @@ namespace DocFind
             std::string path = DirectoriesOperate::getDirPath(keyWordToDocFilePath);
             DirectoriesOperate::createDir(path);
 
-            std::ofstream keyWordToDocFileOutput;
-            keyWordToDocFileOutput.open(keyWordToDocFilePath, std::fstream::out);
-            keyWordToDocFileOutput.close();
+            FileOperate::createFile(keyWordToDocFilePath);
             return;
         }
 

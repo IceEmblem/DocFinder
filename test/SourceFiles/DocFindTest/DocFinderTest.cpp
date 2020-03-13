@@ -2,6 +2,7 @@
 #include <fstream>
 #include "../../../src/DocFind/HeaderFiles/DirectoriesOperate.hpp"
 #include "../../../src/DocFind/HeaderFiles/DocFinder.hpp"
+#include "../../../src/DocFind/HeaderFiles/FileOperate.hpp"
 
 using namespace  DocFind;
 
@@ -21,14 +22,9 @@ public:
         DirectoriesOperate::createDir(programDirPath + "/DocFinderTestDir");
 
         // 创建测试文件
-        ofstream file1(programDirPath+"/DocFinderTestDir/Pre_DocFinderTestFile1.txt", fstream::out);
-        file1.close();
-
-        ofstream file2(programDirPath+"/DocFinderTestDir/Pre_DocFinderTestFile2.txt", fstream::out);
-        file2.close();
-
-        ofstream file3(programDirPath+"/DocFinderTestDir/测试文件3.txt", fstream::out);
-        file3.close();
+        FileOperate::createFile("/DocFinderTestDir/Pre_DocFinderTestFile1.txt");
+        FileOperate::createFile("/DocFinderTestDir/Pre_DocFinderTestFile2.txt");
+        FileOperate::createFile("/DocFinderTestDir/测试文件3.txt");
     }
     
     // 最后一个测试用例结束后调用

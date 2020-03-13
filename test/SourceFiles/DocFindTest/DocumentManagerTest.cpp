@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <fstream>
 #include "../../../src/DocFind/HeaderFiles/DocumentManager.hpp"
+#include "../../../src/DocFind/HeaderFiles/FileOperate.hpp"
 
 using namespace  DocFind;
 using namespace std;
@@ -21,14 +22,9 @@ public:
         DirectoriesOperate::createDir(currentDirPath + "/ChildDir");
 
         // 创建测试文件
-        ofstream file1(currentDirPath+"/File1.txt", fstream::out);
-        file1.close();
-
-        ofstream file2(currentDirPath+"/File2.txt", fstream::out);
-        file2.close();
-
-        ofstream file3(currentDirPath+"/ChildDir/File3.txt", fstream::out);
-        file3.close();
+        FileOperate::createFile(currentDirPath+"/File1.txt");
+        FileOperate::createFile(currentDirPath+"/File2.txt");
+        FileOperate::createFile(currentDirPath+"/ChildDir/File3.txt");
     }
     
     // 最后一个测试用例结束后调用

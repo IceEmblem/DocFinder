@@ -6,6 +6,7 @@
 #include "../HeaderFiles/DocumentOpenerFactory.hpp"
 #include "../HeaderFiles/DirectoriesOperate.hpp"
 #include "../HeaderFiles/DocumentOpeners/WordDocOpener.hpp"
+#include "../HeaderFiles/FileOperate.hpp"
 
 namespace DocFind
 {
@@ -13,12 +14,6 @@ namespace DocFind
 
     // 可执行程序路径文件相对路径
     static std::string execPathFileRelativePath = "/DocFinder/ExecPath.txt";
-
-    // 判断文件是否存在
-    static bool isExistFile(std::string path){
-        std::ifstream f(path);
-        return f.good();
-    }
 
     void DocumentOpenerFactory::readExecPathFromFile(){
         std::string execPathFilePath = _currentPath + execPathFileRelativePath;
@@ -32,9 +27,7 @@ namespace DocFind
             std::string path = DirectoriesOperate::getDirPath(execPathFilePath);
             DirectoriesOperate::createDir(path);
 
-            std::ofstream ofile;
-            ofile.open(execPathFilePath, std::fstream::out);
-            ofile.close();
+            FileOperate::createFile(execPathFilePath);
             return;
         }
 
@@ -51,7 +44,7 @@ namespace DocFind
             std::string execPath;
             lineStringStram >> execPath;
 
-            _execPaths[execName].push_back(ExecPath(execPath, isExistFile(execPath)));
+            _execPaths[execName].push_back(ExecPath(execPath, FileOperate::isExistFile(execPath)));
         }
 
         file.close();
@@ -104,7 +97,7 @@ namespace DocFind
         }
 
         if(!isExist){
-            _execPaths[execName].push_back(ExecPath(execPath, isExistFile(execPath)));
+            _execPaths[execName].push_back(ExecPath(execPath, FileOperate::isExistFile(execPath)));
         }
         writeFileFromExecPath();
     }

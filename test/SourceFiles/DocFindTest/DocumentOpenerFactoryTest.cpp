@@ -2,6 +2,7 @@
 #include <fstream>
 #include "../../../src/DocFind/HeaderFiles/DocumentOpenerFactory.hpp"
 #include "../../../src/DocFind/HeaderFiles/DirectoriesOperate.hpp"
+#include "../../../src/DocFind/HeaderFiles/FileOperate.hpp"
 
 using namespace DocFind;
 
@@ -37,8 +38,7 @@ public:
     static void SetUpTestCase()
     {
         DirectoriesOperate::createDir(programDirPath);
-        std::ofstream execFile;
-        execFile.open(execPath);
+        FileOperate::createFile(execPath);
         DocumentOpenerFactory::RegisterBuiltInOpener();
     }
     

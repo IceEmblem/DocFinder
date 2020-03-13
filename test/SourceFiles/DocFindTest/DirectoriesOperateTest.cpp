@@ -2,6 +2,7 @@
 #include <string>
 #include <fstream>
 #include "../../../src/DocFind/HeaderFiles/DirectoriesOperate.hpp"
+#include "../../../src/DocFind/HeaderFiles/FileOperate.hpp"
 
 using namespace  DocFind;
 
@@ -15,12 +16,10 @@ public:
         DirectoriesOperate::createDir(programDirPath + "/DirectoriesOperateTestDir/TestChildDir");
 
         // 创建测试文件
-        std::ofstream file1(programDirPath + "/DirectoriesOperateTestDir/TestFile1.txt", std::fstream::out);
-        file1.close();
+        FileOperate::createFile(programDirPath + "/DirectoriesOperateTestDir/TestFile1.txt");
 
         // 创建测试文件
-        std::ofstream file2(programDirPath + "/DirectoriesOperateTestDir/TestFile2.txt", std::fstream::out);
-        file2.close();
+        FileOperate::createFile(programDirPath + "/DirectoriesOperateTestDir/TestFile2.txt");
     }
     
     // 最后一个测试用例结束后调用

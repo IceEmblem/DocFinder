@@ -3,6 +3,7 @@
 #include "../../../src/Program/HeaderFiles/CommandContext.hpp"
 #include "../../../src/Program/HeaderFiles/FindCommand.hpp"
 #include "../../../src/DocFind/HeaderFiles/DirectoriesOperate.hpp"
+#include "../../../src/DocFind/HeaderFiles/FileOperate.hpp"
 
 using namespace std;
 using namespace DocFind;
@@ -20,10 +21,8 @@ public:
         DirectoriesOperate::createDir(programDirPath);
 
         // 创建测试文件
-        ofstream file1(programDirPath+"/FindCommandTestFile1.txt", fstream::out);
-        file1.close();
-        ofstream file2(programDirPath+"/FindCommandTestFile2.txt", fstream::out);
-        file2.close();
+        FileOperate::createFile(programDirPath+"/FindCommandTestFile1.txt");
+        FileOperate::createFile(programDirPath+"/FindCommandTestFile2.txt");
 
         // 初始化命令上下文
         CommandContext::init(programDirPath);
