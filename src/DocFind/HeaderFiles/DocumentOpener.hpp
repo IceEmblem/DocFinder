@@ -14,7 +14,7 @@ namespace DocFind
         static std::string createCommandCmd(std::string docPath, std::string execPath){
             std::string cmd;
             #ifdef _WIN32
-                cmd =  = "\"\"" + execPath + "\"" + " " + "\"" + docPath + "\"\"";
+                cmd = "\"\"" + execPath + "\"" + " " + "\"" + docPath + "\"\"";
             #else
                 cmd = "\"" + execPath + "\"" + " " + "\"" + docPath + "\"";
             #endif
