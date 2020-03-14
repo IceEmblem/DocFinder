@@ -12,8 +12,11 @@ std::string RegisterCommand::exec(std::string command, std::string paramStr, std
         return "参数输入错误，请输入可执行程序名";
     }
 
+    // 移除空格
+    ss.get();
+
     std::string execPath;
-    ss >> execPath;
+    std::getline(ss, execPath);
 
     if(execPath == ""){
         return "参数输入错误，请输入可执行程序路径";

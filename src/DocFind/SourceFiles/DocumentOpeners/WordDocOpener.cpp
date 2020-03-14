@@ -14,7 +14,7 @@ namespace DocFind {
     }
 
     void WordDocOpener::open(std::string docPath, std::string execPath) const{
-        std::string cmd = "\"" + execPath + "\"" + " " + "\"" + docPath + "\"";
+        std::string cmd = "\"\"" + execPath + "\"" + " " + "\"" + docPath + "\"\"";
         system(cmd.c_str());
     }
 }
