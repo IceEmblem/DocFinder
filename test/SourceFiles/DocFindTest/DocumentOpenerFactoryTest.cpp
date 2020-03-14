@@ -30,7 +30,7 @@ public:
 };
 
 static std::string programDirPath = "./test/bin/DocumentOpenerFactoryTestDir";
-static std::string execPath = programDirPath + "/testExecPath";
+static std::string execPath = programDirPath + "/test ExecPath";
 
 class DocumentOpenerFactoryTest : public testing::Test{
 public:
@@ -45,6 +45,8 @@ public:
     // 最后一个测试用例结束后调用
     static void TearDownTestCase()
     {
+        std::string cmd = std::string("rm -r ") + programDirPath;
+        system(cmd.c_str());
     }
 
     // 每个测试用例开始时调用

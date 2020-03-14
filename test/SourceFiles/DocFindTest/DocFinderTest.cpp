@@ -8,7 +8,7 @@ using namespace  DocFind;
 
 using namespace std;
 
-static std::string programDirPath = "./test/bin";
+static std::string programDirPath = "./test/bin/DocFinderTestDir";
 
 DocFind::DocFinder * docFinder;
 
@@ -19,23 +19,24 @@ public:
     // 第一个测试用例开始时调用
     static void SetUpTestCase()
     {
-        DirectoriesOperate::createDir(programDirPath + "/DocFinderTestDir");
+        DirectoriesOperate::createDir(programDirPath);
 
         // 创建测试文件
-        FileOperate::createFile("/DocFinderTestDir/Pre_DocFinderTestFile1.txt");
-        FileOperate::createFile("/DocFinderTestDir/Pre_DocFinderTestFile2.txt");
-        FileOperate::createFile("/DocFinderTestDir/测试文件3.txt");
+        FileOperate::createFile(programDirPath + "/Pre_DocFinderTestFile1.txt");
+        FileOperate::createFile(programDirPath + "/Pre_DocFinderTestFile2.txt");
+        FileOperate::createFile(programDirPath + "/测试文件3.txt");
     }
     
     // 最后一个测试用例结束后调用
     static void TearDownTestCase()
     {
+        system(("rm -r " + programDirPath).c_str());
     }
 
     // 每个测试用例开始时调用
     void SetUp()
     {
-        docFinder = new DocFind::DocFinder(programDirPath + "/DocFinderTestDir");
+        docFinder = new DocFind::DocFinder(programDirPath + "");
     }
 
     // 每个测试用例结束后调用

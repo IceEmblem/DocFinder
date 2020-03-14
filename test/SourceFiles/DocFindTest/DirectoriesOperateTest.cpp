@@ -6,25 +6,27 @@
 
 using namespace  DocFind;
 
-static std::string programDirPath = "./test/bin";
+static std::string programDirPath = "./test/bin/DirectoriesOperateTestDir";
 
 class DirectoriesOperateTest : public testing::Test {
 public:
     static void SetUpTestCase()
     {
-        DirectoriesOperate::createDir(programDirPath + "/DirectoriesOperateTestDir");
-        DirectoriesOperate::createDir(programDirPath + "/DirectoriesOperateTestDir/TestChildDir");
+        DirectoriesOperate::createDir(programDirPath);
+        DirectoriesOperate::createDir(programDirPath + "/TestChildDir");
 
         // 创建测试文件
-        FileOperate::createFile(programDirPath + "/DirectoriesOperateTestDir/TestFile1.txt");
+        FileOperate::createFile(programDirPath + "/TestFile1.txt");
 
         // 创建测试文件
-        FileOperate::createFile(programDirPath + "/DirectoriesOperateTestDir/TestFile2.txt");
+        FileOperate::createFile(programDirPath + "/TestFile2.txt");
     }
     
     // 最后一个测试用例结束后调用
     static void TearDownTestCase()
     {
+        std::string cmd = "rm -r " + programDirPath;
+        system(cmd.c_str());
     }
 
     // 每个测试用例开始时调用
@@ -39,7 +41,7 @@ public:
 };
 
 TEST_F(DirectoriesOperateTest, getFilesTest){
-    auto results = DirectoriesOperate::getFiles(programDirPath + "/DirectoriesOperateTestDir");
+    auto results = DirectoriesOperate::getFiles(programDirPath);
 
     EXPECT_EQ(results.size(), 3);
     EXPECT_EQ(results["TestChildDir"], true);

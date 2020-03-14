@@ -33,6 +33,7 @@ public:
     static void TearDownTestCase()
     {
         delete findCommand;
+        system(("rm -r " + programDirPath).c_str());
     }
 
     // 每个测试用例开始时调用

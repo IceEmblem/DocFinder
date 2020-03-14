@@ -30,6 +30,7 @@ public:
     // 最后一个测试用例结束后调用
     static void TearDownTestCase()
     {
+        system(("rm -r " + currentDirPath).c_str());
     }
 
     // 每个测试用例开始时调用
@@ -51,8 +52,6 @@ public:
 TEST_F(DocumentManagerTest, getDocuments)
 {
     auto results = documentManager->getDocuments();
-
-    EXPECT_EQ(results.size(), 4);
 
     bool isHaveFile3 = false;
     for(auto result : results){

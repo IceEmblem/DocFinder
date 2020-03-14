@@ -41,9 +41,11 @@ namespace DocFind
             // 程序名
             std::string execName;
             lineStringStram >> execName;
+            // 移除空格
+            lineStringStram.get();
 
             std::string execPath;
-            lineStringStram >> execPath;
+            std::getline(lineStringStram, execPath);
 
             _execPaths[execName].push_back(ExecPath(execPath, FileOperate::isExistExecFile(execPath)));
         }
@@ -99,8 +101,8 @@ namespace DocFind
 
         if(!isExist){
             _execPaths[execName].push_back(ExecPath(execPath, FileOperate::isExistExecFile(execPath)));
+            writeFileFromExecPath();
         }
-        writeFileFromExecPath();
     }
 
     std::shared_ptr<DocumentOpener> DocumentOpenerFactory::getDocumentOpener(std::string docPostfix) const{
