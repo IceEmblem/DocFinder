@@ -15,7 +15,6 @@ namespace DocFind {
     }
 
     void TxtOpener::open(std::string docPath, std::string execPath) const{
-        std::string cmd = "\"\"" + execPath + "\"" + " " + "\"" + docPath + "\"\"";
-        system(cmd.c_str());
+        system(createCommandCmd(docPath, execPath).c_str());
     }
 }
