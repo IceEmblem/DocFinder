@@ -8,12 +8,15 @@
 #include "./Directories.hpp"
 #include "./DirectoriesOperate.hpp"
 #include "./KeyWordToDoc.hpp"
+#include "./DocumentReaderFactory.hpp"
 
 namespace DocFind
 {
     class DocumentManager
     {
     private:
+        std::shared_ptr<DocumentReaderFactory> _documentReaderFactory = std::make_shared<DocumentReaderFactory>();
+
         // 当前文档管理器使用的目录路径
         std::string _dirPath;
         std::shared_ptr<Directories> _dir;
@@ -28,6 +31,9 @@ namespace DocFind
 
         // 将 KeyWordToDoc 中的关键字添加到 Document 中
         void addKeysToDocObject(std::vector<std::shared_ptr<Document>> &docs);
+
+        // 读取文档内容，将文档内容的标题作为关键字添加到文档对象中
+        void addTitleToDocObject(std::vector<std::shared_ptr<Document>> &docs);
 
         // 生成目录
         std::shared_ptr<Directories> createDirectories(std::string relativePath, std::vector<std::string> keys);

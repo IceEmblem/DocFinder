@@ -245,6 +245,26 @@ namespace DocFind
         }
     }
 
+    // 读取文档内容，将文档内容的标题作为关键字添加到文档对象中
+    void DocumentManager::addTitleToDocObject(std::vector<std::shared_ptr<Document>> &docs){
+        for(auto doc : docs){
+            std::string docPath = this->_dirPath + doc->relativePath;
+            auto docReader = _documentReaderFactory->getDocumentReader(
+                FileOperate::getPostfix(docPath));
+            
+            if(docReader == nullptr){
+                continue;
+            }
+
+            auto titles = docReader->getDocTitle(docPath);
+
+            // 将标题添加到关键字
+            for(auto title : titles){
+                doc->keys.push_back(title);
+            }
+        }
+    }
+
     // 获取文档
     std::vector<std::shared_ptr<Document>> DocumentManager::getDocuments()
     {
@@ -253,6 +273,7 @@ namespace DocFind
         }
         std::vector<std::shared_ptr<Document>> docs = DocFind::getDocuments(_dir);
         addKeysToDocObject(docs);
+        addTitleToDocObject(docs);
         keyDocument = std::make_shared<std::vector<std::shared_ptr<Document>>>(docs);
 
         return *keyDocument;
