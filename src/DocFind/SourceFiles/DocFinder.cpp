@@ -37,6 +37,7 @@ namespace DocFind
                 std::transform(key.begin(), key.end(), keyLower.begin(), ::tolower);
                 if(docKeyLower.find(keyLower) != docKeyLower.npos){
                     results.push_back(doc);
+                    break;
                 }
             }
         }

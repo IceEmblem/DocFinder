@@ -39,6 +39,7 @@ std::string FindCommand::find (std::string paramStr) {
     int no = 1;
     for (auto doc : results) {
         outputText << no << ". " << doc.document -> relativePath << std::endl;
+        no++;
     }
 
     return outputText.str ();
