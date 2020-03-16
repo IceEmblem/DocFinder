@@ -127,6 +127,8 @@ namespace DocFind
     DocumentManager::DocumentManager(std::string dirPath):_dirPath(dirPath)
     {
         _dir = createDirectories("", {});
+        DocumentReaderFactory::RegisterBuiltInReader();
+        _documentReaderFactory = std::make_shared<DocumentReaderFactory>();
         readKeyWordToDocFromFile(_dirPath + keyWordToDocFileRelativePath);
     }
 

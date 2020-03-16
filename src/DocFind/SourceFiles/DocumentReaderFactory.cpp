@@ -1,4 +1,5 @@
 #include "../HeaderFiles/DocumentReaderFactory.hpp"
+#include "../HeaderFiles/DocumentReaders/TxtReader.hpp"
 
 namespace DocFind
 {
@@ -9,7 +10,13 @@ namespace DocFind
     }
 
     void DocumentReaderFactory::RegisterBuiltInReader(){
+        static bool isRegister = false;
+        if(isRegister){
+            return;
+        }
 
+        isRegister = true;
+        Register(std::make_shared<TxtReader>());
     }
 
     std::shared_ptr<DocumentReader> DocumentReaderFactory::getDocumentReader(std::string docPostfix) const{

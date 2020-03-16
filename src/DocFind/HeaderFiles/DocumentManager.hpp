@@ -15,7 +15,7 @@ namespace DocFind
     class DocumentManager
     {
     private:
-        std::shared_ptr<DocumentReaderFactory> _documentReaderFactory = std::make_shared<DocumentReaderFactory>();
+        std::shared_ptr<DocumentReaderFactory> _documentReaderFactory;
 
         // 当前文档管理器使用的目录路径
         std::string _dirPath;

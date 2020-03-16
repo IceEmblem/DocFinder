@@ -12,6 +12,7 @@ namespace DocFind
     private:
     public:
         virtual bool isCanReader(std::string docPostfix) = 0;
+        virtual std::string getDocText(std::string docPath) = 0;
         virtual std::vector<std::string> getDocTitle(std::string docPath) = 0;
     };    
 } // namespace DocFind
