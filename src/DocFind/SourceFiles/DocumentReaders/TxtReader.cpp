@@ -19,7 +19,7 @@ namespace DocFind{
     std::string TxtReader::getDocText(std::string docPath){
         std::ifstream file;
         file.open(docPath);
-        if(file){
+        if(!file){
             throw std::logic_error("无法打开文档：" + docPath);
         }
 

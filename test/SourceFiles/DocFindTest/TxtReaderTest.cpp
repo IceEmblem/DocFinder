@@ -10,6 +10,7 @@ using namespace DocFind;
 std::string programPath = "./test/bin/TxtReaderTestDir";
 
 class TxtReaderTest : public testing::Test {
+public:
         // 第一个测试用例开始时调用
     static void SetUpTestCase()
     {
@@ -19,6 +20,7 @@ class TxtReaderTest : public testing::Test {
     // 最后一个测试用例结束后调用
     static void TearDownTestCase()
     {
+        system(("rm -r " + programPath).c_str());
     }
 
     // 每个测试用例开始时调用
@@ -37,6 +39,7 @@ TEST_F(TxtReaderTest, getDocTextTest){
     std::ofstream file;
     file.open(testFile);
     file << "ABCDEF";
+    file.close();
 
     TxtReader txtReader;
     std::string text = txtReader.getDocText(testFile);
