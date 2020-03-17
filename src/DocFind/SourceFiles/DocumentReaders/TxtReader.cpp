@@ -39,7 +39,7 @@ namespace DocFind{
         std::vector<std::string> titles;
 
         // 文本开始
-        static std::regex startRegex("^(.{1,10})(\r?\n)");
+        static std::regex startRegex("^(([a-zA-Z]+|.){1,15})(\r?\n)");
         std::smatch startMatch;
         std::string suffixStr = text;
         if(std::regex_search(suffixStr, startMatch, startRegex)){
@@ -50,7 +50,7 @@ namespace DocFind{
 
 
         // 匹配 换行符+换行符+小于10的字符串+换行符
-        static std::regex titleRegex("(\r?\n){2}(.{1,10})(\r?\n)");
+        static std::regex titleRegex("(\r?\n){2}(([a-zA-Z]+|.){1,15})(\r?\n)");
         std::smatch titleMatch;
 
         while (std::regex_search(suffixStr, titleMatch, titleRegex))

@@ -19,3 +19,4 @@ endmacro()
 
 getSrcFiles("./SourceFiles")
 add_library(DocFind ${srcFiles})
+target_link_libraries(DocFind DuckX)
