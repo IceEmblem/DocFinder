@@ -24,12 +24,12 @@ link_directories(${PROJECT_SOURCE_DIR}/lib)
 # 添加一个可执行程序
 add_executable(main ${srcFiles})
 # 添加库依赖
-target_link_libraries(main DocFind)
+target_link_libraries(main DocFind Infrastructure)
 
 # 只有在 linux 下才生成测试项目
 if(${UNIX})
     # 为了单元测试main需要生成一个库文件
     set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/test/lib)
     add_library(ProgramTestLib ${srcFiles})
-    target_link_libraries(ProgramTestLib DocFind)
+    target_link_libraries(ProgramTestLib DocFind Infrastructure)
 endif(${UNIX})

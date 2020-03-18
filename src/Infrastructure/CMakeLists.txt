@@ -18,19 +18,4 @@ macro(getSrcFiles dir)
 endmacro()
 
 getSrcFiles("./SourceFiles")
-
-# 添加 -pthread 选项
-set(CMAKE_CXX_FLAGS "-std=c++11 -pthread ${CMAKE_CXX_FLAGS}")
-
-# 指定编译所 include 搜索路径
-include_directories("include")
-
-# 指定连接库的搜索目录
-link_directories(${PROJECT_SOURCE_DIR}/test/lib)
-link_directories(${PROJECT_SOURCE_DIR}/test/GTestLib)
-
-add_executable(test "main.cpp" ${srcFiles})
-
-# 添加库依赖
-target_link_libraries(test gtest gtest_main ProgramTestLib DocFind Infrastructure)
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/test/bin)
+add_library(Infrastructure ${srcFiles})

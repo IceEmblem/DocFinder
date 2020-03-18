@@ -1,9 +1,10 @@
 #include <string>
 #include <memory>
 #include <fstream>
+#include "../../Infrastructure/HeaderFiles/FileOperate.hpp"
+#include "../../Infrastructure/HeaderFiles/DirectoriesOperate.hpp"
 #include "../HeaderFiles/DocumentManager.hpp"
 #include "../HeaderFiles/Directories.hpp"
-#include "../HeaderFiles/FileOperate.hpp"
 #include "../HeaderFiles/AppConfiguration.hpp"
 
 namespace DocFind
@@ -101,10 +102,10 @@ namespace DocFind
         if(!keyWordToDocFile){
             keyWordToDocFile.close();
 
-            std::string path = DirectoriesOperate::getDirPath(AppConfiguration::getKeyWordToDocsPath(_dirPath));
-            DirectoriesOperate::createDir(path);
+            std::string path = Infrastructure::DirectoriesOperate::getDirPath(AppConfiguration::getKeyWordToDocsPath(_dirPath));
+            Infrastructure::DirectoriesOperate::createDir(path);
 
-            FileOperate::createFile(AppConfiguration::getKeyWordToDocsPath(_dirPath));
+            Infrastructure::FileOperate::createFile(AppConfiguration::getKeyWordToDocsPath(_dirPath));
             return;
         }
 
@@ -176,10 +177,10 @@ namespace DocFind
         if(!file){
             file.close();
 
-            std::string path = DirectoriesOperate::getDirPath(AppConfiguration::getDocumentTitlesPath(_dirPath));
-            DirectoriesOperate::createDir(path);
+            std::string path = Infrastructure::DirectoriesOperate::getDirPath(AppConfiguration::getDocumentTitlesPath(_dirPath));
+            Infrastructure::DirectoriesOperate::createDir(path);
 
-            FileOperate::createFile(AppConfiguration::getDocumentTitlesPath(_dirPath));
+            Infrastructure::FileOperate::createFile(AppConfiguration::getDocumentTitlesPath(_dirPath));
             return;
         }
 
@@ -237,7 +238,7 @@ namespace DocFind
             // 没有对应的文档读取器
             // 或者文档是新建的
             if(_documentTitles->find(doc->relativePath) == _documentTitles->end()){
-                auto reader = _documentReaderFactory->getDocumentReader(FileOperate::getPostfix(doc->relativePath));
+                auto reader = _documentReaderFactory->getDocumentReader(Infrastructure::FileOperate::getPostfix(doc->relativePath));
                 if(reader == nullptr){
                     continue;
                 }
@@ -251,7 +252,7 @@ namespace DocFind
             // 如果文件有更新
             if(doc->lastModifiedTime > docTitle.lastModifiedTime){
                 // 更新标题
-                auto reader = _documentReaderFactory->getDocumentReader(FileOperate::getPostfix(doc->relativePath));
+                auto reader = _documentReaderFactory->getDocumentReader(Infrastructure::FileOperate::getPostfix(doc->relativePath));
                 auto titles = reader->getDocTitle(_dirPath + doc->relativePath);
                 docTitle.titles = titles;
                 isNeedUpdateTitleFile = true;
@@ -277,7 +278,7 @@ namespace DocFind
 
         std::map<std::string, bool> childFiles;
         try{
-            childFiles = DirectoriesOperate::getFiles(_dirPath + relativePath);
+            childFiles = Infrastructure::DirectoriesOperate::getFiles(_dirPath + relativePath);
         }
         catch(std::exception&)
         {
@@ -305,7 +306,7 @@ namespace DocFind
                 childs.push_back(std::make_shared<Document>(
                         Document(
                             childFileRelativePath,
-                            FileOperate::getModifiedTime(_dirPath + childFileRelativePath),
+                            Infrastructure::FileOperate::getModifiedTime(_dirPath + childFileRelativePath),
                             childKeys)));
             }
         }

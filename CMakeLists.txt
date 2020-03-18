@@ -12,6 +12,7 @@ if(${WIN32})
 endif(${WIN32})
 
 add_subdirectory("src/DuckX")
+add_subdirectory("src/Infrastructure")
 add_subdirectory("src/DocFind")
 add_subdirectory("src/Program")
 # 只有在 linux 下才生成测试项目

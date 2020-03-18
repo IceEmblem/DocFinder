@@ -1,11 +1,11 @@
 #include <gtest/gtest.h>
 #include <fstream>
-#include "../../../src/DocFind/HeaderFiles/DirectoriesOperate.hpp"
+#include "../../../src/Infrastructure/HeaderFiles/DirectoriesOperate.hpp"
 #include "../../../src/DocFind/HeaderFiles/DocFinder.hpp"
-#include "../../../src/DocFind/HeaderFiles/FileOperate.hpp"
+#include "../../../src/Infrastructure/HeaderFiles/FileOperate.hpp"
 
-using namespace  DocFind;
-
+using namespace DocFind;
+using namespace Infrastructure;
 using namespace std;
 
 static std::string programDirPath = "./test/bin/DocFinderTestDir";

@@ -6,7 +6,7 @@
 #ifdef _WIN32
 // windows
 #include <WINDOWS.H>
-namespace DocFind
+namespace Infrastructure
 {
     std::map<std::string, bool> DirectoriesOperate::getFiles(std::string dirPath)
     {
@@ -30,7 +30,7 @@ namespace DocFind
 #else
 // linux
 #include <dirent.h>
-namespace DocFind
+namespace Infrastructure
 {
     std::map<std::string, bool> DirectoriesOperate::getFiles(std::string dirPath)
     {
@@ -59,7 +59,7 @@ namespace DocFind
 #include <unistd.h>
 #endif
 
-namespace DocFind
+namespace Infrastructure
 {
     bool DirectoriesOperate::isExitDir(std::string dirPath){
         return access(dirPath.c_str(), F_OK) == 0;

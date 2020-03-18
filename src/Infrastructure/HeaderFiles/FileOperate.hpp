@@ -4,7 +4,7 @@
 #include <string>
 #include <fstream>
 
-namespace DocFind {
+namespace Infrastructure {
     class FileOperate
     {
     private:

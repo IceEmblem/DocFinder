@@ -2,11 +2,12 @@
 #include <fstream>
 #include "../../../src/Program/HeaderFiles/CommandContext.hpp"
 #include "../../../src/Program/HeaderFiles/FindCommand.hpp"
-#include "../../../src/DocFind/HeaderFiles/DirectoriesOperate.hpp"
-#include "../../../src/DocFind/HeaderFiles/FileOperate.hpp"
+#include "../../../src/Infrastructure/HeaderFiles/DirectoriesOperate.hpp"
+#include "../../../src/Infrastructure/HeaderFiles/FileOperate.hpp"
 
 using namespace std;
 using namespace DocFind;
+using namespace Infrastructure;
 
 
 static std::string programDirPath = "./test/bin/FindCommandTestDir";

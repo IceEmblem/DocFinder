@@ -6,7 +6,6 @@
 #include <memory>
 #include "./DFFile.hpp"
 #include "./Document.hpp"
-#include "./DirectoriesOperate.hpp"
 
 namespace DocFind
 {

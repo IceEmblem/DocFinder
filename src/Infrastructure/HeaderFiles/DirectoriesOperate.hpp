@@ -3,7 +3,7 @@
 
 #include <map>
 #include <string>
-namespace DocFind
+namespace Infrastructure
 {
     class DirectoriesOperate
     {

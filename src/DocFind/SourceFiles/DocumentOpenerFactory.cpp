@@ -4,10 +4,10 @@
 #include <sstream>
 #include <regex>
 #include "../HeaderFiles/DocumentOpenerFactory.hpp"
-#include "../HeaderFiles/DirectoriesOperate.hpp"
 #include "../HeaderFiles/DocumentOpeners/WordDocOpener.hpp"
 #include "../HeaderFiles/DocumentOpeners/TxtOpener.hpp"
-#include "../HeaderFiles/FileOperate.hpp"
+#include "../../Infrastructure/HeaderFiles/FileOperate.hpp"
+#include "../../Infrastructure/HeaderFiles/DirectoriesOperate.hpp"
 
 namespace DocFind
 {
@@ -25,10 +25,10 @@ namespace DocFind
         if(!file){
             file.close();
 
-            std::string path = DirectoriesOperate::getDirPath(execPathFilePath);
-            DirectoriesOperate::createDir(path);
+            std::string path = Infrastructure::DirectoriesOperate::getDirPath(execPathFilePath);
+            Infrastructure::DirectoriesOperate::createDir(path);
 
-            FileOperate::createFile(execPathFilePath);
+            Infrastructure::FileOperate::createFile(execPathFilePath);
             return;
         }
 
@@ -47,7 +47,7 @@ namespace DocFind
             std::string execPath;
             std::getline(lineStringStram, execPath);
 
-            _execPaths[execName].push_back(ExecPath(execPath, FileOperate::isExistExecFile(execPath)));
+            _execPaths[execName].push_back(ExecPath(execPath, Infrastructure::FileOperate::isExistExecFile(execPath)));
         }
 
         file.close();
@@ -100,7 +100,7 @@ namespace DocFind
         }
 
         if(!isExist){
-            _execPaths[execName].push_back(ExecPath(execPath, FileOperate::isExistExecFile(execPath)));
+            _execPaths[execName].push_back(ExecPath(execPath, Infrastructure::FileOperate::isExistExecFile(execPath)));
             writeFileFromExecPath();
         }
     }
@@ -116,7 +116,7 @@ namespace DocFind
     }
 
     OpenResult DocumentOpenerFactory::open(std::string docPath){
-        std::string postfix = FileOperate::getPostfix(docPath);
+        std::string postfix = Infrastructure::FileOperate::getPostfix(docPath);
         if(postfix == "")
         {
             throw std::logic_error("文档不存在后缀，无法找到合适的程序用于打开文档");

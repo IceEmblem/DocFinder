@@ -1,9 +1,11 @@
 #include <gtest/gtest.h>
 #include <fstream>
 #include "../../../src/DocFind/HeaderFiles/DocumentManager.hpp"
-#include "../../../src/DocFind/HeaderFiles/FileOperate.hpp"
+#include "../../../src/Infrastructure/HeaderFiles/FileOperate.hpp"
+#include "../../../src/Infrastructure/HeaderFiles/DirectoriesOperate.hpp"
 
 using namespace  DocFind;
+using namespace Infrastructure;
 using namespace std;
 
 static std::string currentDirPath = "./test/bin/DocumentManagerTestDir";

@@ -2,10 +2,11 @@
 #include <fstream>
 #include <sstream>
 #include "../../../src/DocFind/HeaderFiles/DocumentReaders/TxtReader.hpp"
-#include "../../../src/DocFind/HeaderFiles/DirectoriesOperate.hpp"
-#include "../../../src/DocFind/HeaderFiles/FileOperate.hpp"
+#include "../../../src/Infrastructure/HeaderFiles/DirectoriesOperate.hpp"
+#include "../../../src/Infrastructure/HeaderFiles/FileOperate.hpp"
 
 using namespace DocFind;
+using namespace Infrastructure;
 
 std::string programPath = "./test/bin/TxtReaderTestDir";
 

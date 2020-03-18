@@ -3,7 +3,7 @@
 #include <regex>
 #include "../HeaderFiles/CommandManager.hpp"
 #include "../HeaderFiles/CommandContext.hpp"
-#include "../../DocFind/HeaderFiles/FileOperate.hpp"
+#include "../../Infrastructure/HeaderFiles/FileOperate.hpp"
 
 int main(int argc, char * argv[]){
     std::cout << "欢迎使用文档查找器" << std::endl;
@@ -12,7 +12,7 @@ int main(int argc, char * argv[]){
 
     std::string programPath;
     if(argc > 0){
-        programPath = DocFind::FileOperate::getFileDirPath(argv[0]);
+        programPath = Infrastructure::FileOperate::getFileDirPath(argv[0]);
     }
     else{
         programPath = "./";

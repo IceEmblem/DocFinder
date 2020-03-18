@@ -4,7 +4,7 @@
 #include <memory>
 #include "../HeaderFiles/FileOperate.hpp"
 
-namespace DocFind {
+namespace Infrastructure {
     bool FileOperate::isExistFile(std::string path){
         std::ifstream f(path);
         return f.good();
@@ -120,7 +120,7 @@ namespace DocFind {
 // windows
 #include <WINDOWS.H>
 
-namespace DocFind
+namespace Infrastructure
 {
     static time_t FileTimeToTime_t(FILETIME ft)  
     {  
@@ -140,12 +140,12 @@ namespace DocFind
 
         return FileTimeToTime_t(wfd.ftLastWriteTime);
     }
-} // namespace DocFind
+} // namespace Infrastructure
 #else
 #include <unistd.h>
 #include <sys/stat.h>
 
-namespace DocFind
+namespace Infrastructure
 {
     time_t FileOperate::getModifiedTime(std::string path){
         struct stat buf;
@@ -158,5 +158,5 @@ namespace DocFind
 
         return time;
     }
-} // namespace DocFind
+} // namespace Infrastructure
 #endif

@@ -7,7 +7,6 @@
 #include <memory>
 #include "./Document.hpp"
 #include "./Directories.hpp"
-#include "./DirectoriesOperate.hpp"
 #include "./KeyWordToDoc.hpp"
 #include "./DocumentReaderFactory.hpp"
 #include "./DocumentTitle.hpp"
