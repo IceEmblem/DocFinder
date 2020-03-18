@@ -4,14 +4,10 @@
 #include "../HeaderFiles/DocumentManager.hpp"
 #include "../HeaderFiles/Directories.hpp"
 #include "../HeaderFiles/FileOperate.hpp"
+#include "../HeaderFiles/AppConfiguration.hpp"
 
 namespace DocFind
 {
-    // 关键字到文档文件 的相对路径
-    static std::string keyWordToDocFileRelativePath("/DocFinder/KeyWordToDocs.txt");
-
-    static std::string docTitleFileRelativePath("/DocFinder/DocumentTitles.txt");
-
     // 根据路径查找文档，使用折中算法
     static int getDocIndexForPath(std::vector<std::shared_ptr<Document>> &docs, std::string path)
     {
@@ -84,22 +80,20 @@ namespace DocFind
     // 从文件读取KeyWordToDoc
     void DocumentManager::readKeyWordToDocFromFile()
     {
-        std::string keyWordToDocFilePath = _dirPath + keyWordToDocFileRelativePath;
-
         // 实例 keyWordToDocs 列表
         keyWordToDocs = std::make_shared<std::vector<KeyWordToDoc>>(std::vector<KeyWordToDoc>());
 
         std::ifstream keyWordToDocFile;
-        keyWordToDocFile.open(keyWordToDocFilePath);
+        keyWordToDocFile.open(AppConfiguration::getKeyWordToDocsPath(_dirPath));
 
         // 如果文件不存在，则创建文件
         if(!keyWordToDocFile){
             keyWordToDocFile.close();
 
-            std::string path = DirectoriesOperate::getDirPath(keyWordToDocFilePath);
+            std::string path = DirectoriesOperate::getDirPath(AppConfiguration::getKeyWordToDocsPath(_dirPath));
             DirectoriesOperate::createDir(path);
 
-            FileOperate::createFile(keyWordToDocFilePath);
+            FileOperate::createFile(AppConfiguration::getKeyWordToDocsPath(_dirPath));
             return;
         }
 
@@ -131,7 +125,7 @@ namespace DocFind
     // 将KeyWordToDoc写入到文件
     void DocumentManager::writeKeyWordToDocToFile()
     {
-        std::ofstream file(_dirPath + keyWordToDocFileRelativePath);
+        std::ofstream file(AppConfiguration::getKeyWordToDocsPath(_dirPath));
 
         for(auto keyWordToDoc : *keyWordToDocs){
             file << keyWordToDoc.relativePath + " ";
@@ -162,19 +156,18 @@ namespace DocFind
 
     void DocumentManager::readDocTitleFromFile(){
         _documentTitles = std::make_shared<std::map<std::string, DocumentTitle>>();
-        std::string docTitleFilePath = _dirPath + docTitleFileRelativePath;
 
         std::ifstream file;
-        file.open(docTitleFilePath);
+        file.open(AppConfiguration::getDocumentTitlesPath(_dirPath));
 
         // 如果文件不存在，则创建文件
         if(!file){
             file.close();
 
-            std::string path = DirectoriesOperate::getDirPath(docTitleFilePath);
+            std::string path = DirectoriesOperate::getDirPath(AppConfiguration::getDocumentTitlesPath(_dirPath));
             DirectoriesOperate::createDir(path);
 
-            FileOperate::createFile(docTitleFilePath);
+            FileOperate::createFile(AppConfiguration::getDocumentTitlesPath(_dirPath));
             return;
         }
 
@@ -206,10 +199,8 @@ namespace DocFind
     }
 
     void DocumentManager::writeDocTitleToFile(){
-        std::string docTitleFilePath = _dirPath + docTitleFileRelativePath;
-
         std::ofstream file;
-        file.open(docTitleFilePath);
+        file.open(AppConfiguration::getDocumentTitlesPath(_dirPath));
         for(auto docTitlePair : *_documentTitles){
             auto docTitle = docTitlePair.second;
             file << docTitle.relativePath + " ";
@@ -266,6 +257,11 @@ namespace DocFind
     
     std::shared_ptr<Directories> DocumentManager::createDirectories(std::string relativePath, std::vector<std::string> keys)
     {
+        // 过滤 程序文件
+        if(relativePath == AppConfiguration::DataFileDirPath){
+            return nullptr;
+        }
+
         std::map<std::string, bool> childFiles;
         try{
             childFiles = DirectoriesOperate::getFiles(_dirPath + relativePath);
@@ -321,6 +317,11 @@ namespace DocFind
         _documentReaderFactory = std::make_shared<DocumentReaderFactory>();
         readKeyWordToDocFromFile();
         readDocTitleFromFile();
+
+        std::vector<std::shared_ptr<Document>> docs = DocFind::getDocuments(_dir);
+        addKeysToDocObject(docs);
+        addTitleToDocObject(docs);
+        keyDocument = std::make_shared<std::vector<std::shared_ptr<Document>>>(docs);
     }
     
     // 将关键字关联到文档
@@ -370,14 +371,6 @@ namespace DocFind
     // 获取文档
     std::vector<std::shared_ptr<Document>> DocumentManager::getDocuments()
     {
-        if(keyDocument){
-            return *keyDocument;
-        }
-        std::vector<std::shared_ptr<Document>> docs = DocFind::getDocuments(_dir);
-        addKeysToDocObject(docs);
-        addTitleToDocObject(docs);
-        keyDocument = std::make_shared<std::vector<std::shared_ptr<Document>>>(docs);
-
         return *keyDocument;
     }
 
