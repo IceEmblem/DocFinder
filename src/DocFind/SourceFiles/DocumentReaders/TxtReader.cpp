@@ -1,6 +1,7 @@
 #include <vector>
 #include <regex>
 #include <fstream>
+#include <sstream>
 #include "../../HeaderFiles/DocumentReaders/TxtReader.hpp"
 
 namespace DocFind{
@@ -38,25 +39,18 @@ namespace DocFind{
     {
         std::vector<std::string> titles;
 
-        // 文本开始
-        static std::regex startRegex("^(([a-zA-Z]+|.){1,15})(\r?\n)");
-        std::smatch startMatch;
-        std::string suffixStr = text;
-        if(std::regex_search(suffixStr, startMatch, startRegex)){
-            titles.push_back(startMatch.str(1));
-            // 获取未匹配的文本
-            suffixStr = startMatch.suffix().str();
-        }
+        std::stringstream ss;
+        ss.str(text);
 
-
-        // 匹配 换行符+换行符+小于10的字符串+换行符
-        static std::regex titleRegex("(\r?\n){2}(([a-zA-Z]+|.){1,15})(\r?\n)");
-        std::smatch titleMatch;
-
-        while (std::regex_search(suffixStr, titleMatch, titleRegex))
+        std::string preLine;
+        std::string line;
+        while (std::getline(ss, line))
         {
-            titles.push_back(titleMatch.str(2));
-            suffixStr = titleMatch.suffix().str();
+            if(preLine == "" && line != "" && line.size() < 30){
+                titles.push_back(line);
+            }
+
+            preLine = line;
         }
 
         return titles;

@@ -60,6 +60,8 @@ namespace duckx {
     public:
         Paragraph();
         Paragraph(pugi::xml_node, pugi::xml_node);
+        pugi::xml_node & get_current(){ return current; }
+
         void set_parent(pugi::xml_node);
         void set_current(pugi::xml_node);
 

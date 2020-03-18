@@ -3,12 +3,14 @@
 
 #include <string>
 #include <vector>
+#include <map>
 #include <memory>
 #include "./Document.hpp"
 #include "./Directories.hpp"
 #include "./DirectoriesOperate.hpp"
 #include "./KeyWordToDoc.hpp"
 #include "./DocumentReaderFactory.hpp"
+#include "./DocumentTitle.hpp"
 
 namespace DocFind
 {
@@ -21,17 +23,20 @@ namespace DocFind
         std::string _dirPath;
         std::shared_ptr<Directories> _dir;
         std::shared_ptr<std::vector<KeyWordToDoc>> keyWordToDocs = nullptr;
+        std::shared_ptr<std::map<std::string, DocumentTitle>> _documentTitles = nullptr;
         std::shared_ptr<std::vector<std::shared_ptr<Document>>> keyDocument = nullptr;
 
         // 从文件中读取 KeyWordToDoc
-        void readKeyWordToDocFromFile(std::string keyWordToDocFilePath);
-
+        void readKeyWordToDocFromFile();
         // 将 KeyWordToDoc 写入文件
         void writeKeyWordToDocToFile();
-
         // 将 KeyWordToDoc 中的关键字添加到 Document 中
         void addKeysToDocObject(std::vector<std::shared_ptr<Document>> &docs);
 
+        // 从文件中读取文档标题
+        void readDocTitleFromFile();
+        // 将 documentTitles 写入文件
+        void writeDocTitleToFile();
         // 读取文档内容，将文档内容的标题作为关键字添加到文档对象中
         void addTitleToDocObject(std::vector<std::shared_ptr<Document>> &docs);
 

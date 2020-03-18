@@ -19,6 +19,9 @@ namespace DocFind {
         // 创建文件
         static void createFile(std::string path);
 
+        // 获取文件最后修改时间
+        static time_t getModifiedTime(std::string path);
+
         // 从文件路径中获取文件名
         static std::string getFileName(std::string path);
 

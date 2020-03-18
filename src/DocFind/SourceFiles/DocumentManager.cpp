@@ -10,6 +10,8 @@ namespace DocFind
     // 关键字到文档文件 的相对路径
     static std::string keyWordToDocFileRelativePath("/DocFinder/KeyWordToDocs.txt");
 
+    static std::string docTitleFileRelativePath("/DocFinder/DocumentTitles.txt");
+
     // 根据路径查找文档，使用折中算法
     static int getDocIndexForPath(std::vector<std::shared_ptr<Document>> &docs, std::string path)
     {
@@ -80,8 +82,10 @@ namespace DocFind
     }
 
     // 从文件读取KeyWordToDoc
-    void DocumentManager::readKeyWordToDocFromFile(std::string keyWordToDocFilePath)
+    void DocumentManager::readKeyWordToDocFromFile()
     {
+        std::string keyWordToDocFilePath = _dirPath + keyWordToDocFileRelativePath;
+
         // 实例 keyWordToDocs 列表
         keyWordToDocs = std::make_shared<std::vector<KeyWordToDoc>>(std::vector<KeyWordToDoc>());
 
@@ -124,14 +128,142 @@ namespace DocFind
         keyWordToDocFile.close();
     }
 
-    DocumentManager::DocumentManager(std::string dirPath):_dirPath(dirPath)
+    // 将KeyWordToDoc写入到文件
+    void DocumentManager::writeKeyWordToDocToFile()
     {
-        _dir = createDirectories("", {});
-        DocumentReaderFactory::RegisterBuiltInReader();
-        _documentReaderFactory = std::make_shared<DocumentReaderFactory>();
-        readKeyWordToDocFromFile(_dirPath + keyWordToDocFileRelativePath);
+        std::ofstream file(_dirPath + keyWordToDocFileRelativePath);
+
+        for(auto keyWordToDoc : *keyWordToDocs){
+            file << keyWordToDoc.relativePath + " ";
+            for(auto key : keyWordToDoc.keys)
+            {
+                file << key + " ";
+            }
+            file << std::endl;
+        }
+
+        file.close();
     }
 
+    // 将关键字添加到文档对象中
+    void DocumentManager::addKeysToDocObject(std::vector<std::shared_ptr<Document>> &docs)
+    {
+        for(auto keyWordToDoc : *keyWordToDocs){
+            int index = getDocIndexForPath(docs, keyWordToDoc.relativePath);
+            if(index < 0){
+                continue;
+            }
+
+            for(auto key : keyWordToDoc.keys){
+                docs[index]->keys.push_back(key);
+            }
+        }
+    }
+
+    void DocumentManager::readDocTitleFromFile(){
+        _documentTitles = std::make_shared<std::map<std::string, DocumentTitle>>();
+        std::string docTitleFilePath = _dirPath + docTitleFileRelativePath;
+
+        std::ifstream file;
+        file.open(docTitleFilePath);
+
+        // 如果文件不存在，则创建文件
+        if(!file){
+            file.close();
+
+            std::string path = DirectoriesOperate::getDirPath(docTitleFilePath);
+            DirectoriesOperate::createDir(path);
+
+            FileOperate::createFile(docTitleFilePath);
+            return;
+        }
+
+        std::string line;
+        while (std::getline(file, line)){
+            std::istringstream lineStringStram;
+            lineStringStram.str(line);
+
+            // 第一个为路径
+            std::string path;
+            lineStringStram >> path;
+
+            // 第二个为最后修改时间
+            time_t lastModifiedTime;
+            lineStringStram >> lastModifiedTime;
+
+            // 最后都是标题
+            std::vector<std::string> titles;
+            std::string title;
+            while (lineStringStram >> title)
+            {
+                titles.push_back(title);
+            }
+
+            _documentTitles->insert(std::make_pair(path, DocumentTitle(path, lastModifiedTime, titles)));
+        }
+
+        file.close();
+    }
+
+    void DocumentManager::writeDocTitleToFile(){
+        std::string docTitleFilePath = _dirPath + docTitleFileRelativePath;
+
+        std::ofstream file;
+        file.open(docTitleFilePath);
+        for(auto docTitlePair : *_documentTitles){
+            auto docTitle = docTitlePair.second;
+            file << docTitle.relativePath + " ";
+            file << docTitle.lastModifiedTime << " ";
+            for(auto title : docTitle.titles)
+            {
+                file << title + " ";
+            }
+            file << std::endl;
+        }
+
+        file.close();
+    }
+
+    // 读取文档内容，将文档内容的标题作为关键字添加到文档对象中
+    void DocumentManager::addTitleToDocObject(std::vector<std::shared_ptr<Document>> &docs){
+        // 是否需要更新存放标题的文件
+        bool isNeedUpdateTitleFile = false;
+        for(auto doc : docs){
+            // 如果 _documentTitles 中不存在，则说明
+            // 没有对应的文档读取器
+            // 或者文档是新建的
+            if(_documentTitles->find(doc->relativePath) == _documentTitles->end()){
+                auto reader = _documentReaderFactory->getDocumentReader(FileOperate::getPostfix(doc->relativePath));
+                if(reader == nullptr){
+                    continue;
+                }
+                auto titles = reader->getDocTitle(_dirPath + doc->relativePath);
+                _documentTitles->insert(std::make_pair(doc->relativePath, DocumentTitle(doc->relativePath, doc->lastModifiedTime, titles)));
+                isNeedUpdateTitleFile = true;
+            }
+
+            DocumentTitle& docTitle = _documentTitles->at(doc->relativePath);
+
+            // 如果文件有更新
+            if(doc->lastModifiedTime > docTitle.lastModifiedTime){
+                // 更新标题
+                auto reader = _documentReaderFactory->getDocumentReader(FileOperate::getPostfix(doc->relativePath));
+                auto titles = reader->getDocTitle(_dirPath + doc->relativePath);
+                docTitle.titles = titles;
+                isNeedUpdateTitleFile = true;
+            }
+
+            // 将标题添加到关键字
+            for(auto title : docTitle.titles){
+                doc->keys.push_back(title);
+            }
+        }
+
+        if(isNeedUpdateTitleFile){
+            writeDocTitleToFile();
+        }
+    }
+    
     std::shared_ptr<Directories> DocumentManager::createDirectories(std::string relativePath, std::vector<std::string> keys)
     {
         std::map<std::string, bool> childFiles;
@@ -152,14 +284,20 @@ namespace DocFind
             std::vector<std::string> childKeys = keys;
             childKeys.push_back(childFile.first);
 
+            std::string childFileRelativePath = relativePath + "/" + childFile.first;
+
             if(childFile.second == true){
-                auto pt = createDirectories(relativePath + "/" + childFile.first, childKeys);
+                auto pt = createDirectories(childFileRelativePath, childKeys);
                 if(pt != nullptr){
                     childs.push_back(pt);
                 }
             }
             else{
-                childs.push_back(std::make_shared<Document>(Document(relativePath + "/" + childFile.first, childKeys)));
+                childs.push_back(std::make_shared<Document>(
+                        Document(
+                            childFileRelativePath,
+                            FileOperate::getModifiedTime(_dirPath + childFileRelativePath),
+                            childKeys)));
             }
         }
 
@@ -168,24 +306,21 @@ namespace DocFind
             return right->relativePath.compare(left->relativePath) > 0 ? true : false;
         });
 
-        return std::make_shared<Directories>(Directories(relativePath, keys, childs));
+        return std::make_shared<Directories>(
+            Directories(
+                relativePath, 
+                FileOperate::getModifiedTime(_dirPath + relativePath),
+                keys, 
+                childs));
     }
-    
-    // 将KeyWordToDoc写入到文件
-    void DocumentManager::writeKeyWordToDocToFile()
+
+    DocumentManager::DocumentManager(std::string dirPath):_dirPath(dirPath)
     {
-        std::ofstream file(_dirPath + keyWordToDocFileRelativePath);
-
-        for(auto keyWordToDoc : *keyWordToDocs){
-            file << keyWordToDoc.relativePath + " ";
-            for(auto key : keyWordToDoc.keys)
-            {
-                file << key + " ";
-            }
-            file << std::endl;
-        }
-
-        file.close();
+        _dir = createDirectories("", {});
+        DocumentReaderFactory::RegisterBuiltInReader();
+        _documentReaderFactory = std::make_shared<DocumentReaderFactory>();
+        readKeyWordToDocFromFile();
+        readDocTitleFromFile();
     }
     
     // 将关键字关联到文档
@@ -230,41 +365,6 @@ namespace DocFind
         }
 
         addKeyWordToDoc(key, (*keyDocument)[index]);
-    }
-
-    // 将关键字添加到文档对象中
-    void DocumentManager::addKeysToDocObject(std::vector<std::shared_ptr<Document>> &docs)
-    {
-        for(auto keyWordToDoc : *keyWordToDocs){
-            int index = getDocIndexForPath(docs, keyWordToDoc.relativePath);
-            if(index < 0){
-                continue;
-            }
-
-            for(auto key : keyWordToDoc.keys){
-                docs[index]->keys.push_back(key);
-            }
-        }
-    }
-
-    // 读取文档内容，将文档内容的标题作为关键字添加到文档对象中
-    void DocumentManager::addTitleToDocObject(std::vector<std::shared_ptr<Document>> &docs){
-        for(auto doc : docs){
-            std::string docPath = this->_dirPath + doc->relativePath;
-            auto docReader = _documentReaderFactory->getDocumentReader(
-                FileOperate::getPostfix(docPath));
-            
-            if(docReader == nullptr){
-                continue;
-            }
-
-            auto titles = docReader->getDocTitle(docPath);
-
-            // 将标题添加到关键字
-            for(auto title : titles){
-                doc->keys.push_back(title);
-            }
-        }
     }
 
     // 获取文档

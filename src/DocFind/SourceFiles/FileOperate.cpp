@@ -115,3 +115,35 @@ namespace DocFind {
         return sresult.str(1);
     }
 }
+
+#ifdef _WIN32
+// windows
+#include <WINDOWS.H>
+
+namespace DocFind
+{
+    static time_t FileTimeToTime_t(FILETIME ft)  
+    {  
+        LONGLONG ll;  
+        ULARGE_INTEGER ui;  
+        ui.LowPart = ft.dwLowDateTime;  
+        ui.HighPart = ft.dwHighDateTime;  
+        ll = ft.dwHighDateTime  <<  32  +  ft.dwLowDateTime;  //这一步是不是多余的
+        time_t t = ((LONGLONG)(ui.QuadPart - 116444736000000000)/10000000);
+
+        return t;
+    }
+
+    time_t FileOperate::getModifiedTime(std::string path){
+        WIN32_FIND_DATA wfd;
+        HANDLE hFind = FindFirstFile(path.c_str(), &wfd);
+
+        return FileTimeToTime_t(wfd.ftLastWriteTime);
+    }
+} // namespace DocFind
+#else
+namespace DocFind
+{
+    
+} // namespace DocFind
+#endif

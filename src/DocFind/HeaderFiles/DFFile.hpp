@@ -16,7 +16,15 @@ namespace DocFind
     protected:
 
     public:
-        DFFile(std::string relativePath, bool isDir, std::vector<std::string> keys):relativePath(relativePath), isDir(isDir), keys(keys)
+        DFFile(
+            std::string relativePath, 
+            bool isDir, 
+            time_t lastModifiedTime, 
+            std::vector<std::string> keys):
+            relativePath(relativePath), 
+            isDir(isDir), 
+            lastModifiedTime(lastModifiedTime),
+            keys(keys)
         {
             static std::regex nameRegex("(\\\\|/)([^\\\\/]*?)$");
             std::smatch sresult;
@@ -33,6 +41,7 @@ namespace DocFind
         std::string relativePath;
         std::string name;
         bool isDir;
+        time_t lastModifiedTime;
         std::vector<std::string> keys;
     };
 }
