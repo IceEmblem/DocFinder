@@ -142,8 +142,21 @@ namespace DocFind
     }
 } // namespace DocFind
 #else
+#include <unistd.h>
+#include <sys/stat.h>
+
 namespace DocFind
 {
-    
+    time_t FileOperate::getModifiedTime(std::string path){
+        struct stat buf;
+        FILE *pFile;
+        pFile = fopen(path.c_str(), "r");
+        int fd = fileno(pFile);
+        fstat(fd, &buf);
+        long time = buf.st_mtime;
+        fclose(pFile);
+
+        return time;
+    }
 } // namespace DocFind
 #endif
