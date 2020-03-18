@@ -77,6 +77,17 @@ namespace DocFind
         return files;
     }
 
+    // 字符串替换
+    static std::string subreplace(std::string resource_str, std::string sub_str, std::string new_str)
+    {
+        std::string::size_type pos = 0;
+        while((pos = resource_str.find(sub_str)) != std::string::npos)   //替换所有指定子串
+        {
+            resource_str.replace(pos, sub_str.length(), new_str);
+        }
+        return resource_str;
+    }
+
     // 从文件读取KeyWordToDoc
     void DocumentManager::readKeyWordToDocFromFile()
     {
@@ -106,6 +117,7 @@ namespace DocFind
             // 第一个为路径
             std::string path;
             lineStringStram >> path;
+            path = subreplace(path, "%20", " ");
 
             // 其余为关键字
             std::vector<std::string> keys;
@@ -128,7 +140,7 @@ namespace DocFind
         std::ofstream file(AppConfiguration::getKeyWordToDocsPath(_dirPath));
 
         for(auto keyWordToDoc : *keyWordToDocs){
-            file << keyWordToDoc.relativePath + " ";
+            file << subreplace(keyWordToDoc.relativePath, " ", "%20") + " ";
             for(auto key : keyWordToDoc.keys)
             {
                 file << key + " ";
@@ -179,6 +191,7 @@ namespace DocFind
             // 第一个为路径
             std::string path;
             lineStringStram >> path;
+            path = subreplace(path, "%20", " ");
 
             // 第二个为最后修改时间
             time_t lastModifiedTime;
@@ -203,7 +216,7 @@ namespace DocFind
         file.open(AppConfiguration::getDocumentTitlesPath(_dirPath));
         for(auto docTitlePair : *_documentTitles){
             auto docTitle = docTitlePair.second;
-            file << docTitle.relativePath + " ";
+            file << subreplace(docTitle.relativePath, " ", "%20") + " ";
             file << docTitle.lastModifiedTime << " ";
             for(auto title : docTitle.titles)
             {
@@ -305,7 +318,6 @@ namespace DocFind
         return std::make_shared<Directories>(
             Directories(
                 relativePath, 
-                FileOperate::getModifiedTime(_dirPath + relativePath),
                 keys, 
                 childs));
     }

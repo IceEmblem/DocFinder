@@ -15,7 +15,7 @@ namespace DocFind
     private:
         /* data */
     public:
-        Directories(std::string relativePath, time_t lastModifiedTime,  std::vector<std::string> keys, std::vector<std::shared_ptr<DFFile>> childs):DFFile(relativePath, true, lastModifiedTime, keys), childs(childs)
+        Directories(std::string relativePath,  std::vector<std::string> keys, std::vector<std::shared_ptr<DFFile>> childs):DFFile(relativePath, true, keys), childs(childs)
         {
         }
         
