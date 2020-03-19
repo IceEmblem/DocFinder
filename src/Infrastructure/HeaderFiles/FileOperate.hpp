@@ -19,6 +19,12 @@ namespace Infrastructure {
         // 创建文件
         static void createFile(std::string path);
 
+        // 读取文件
+        static std::string getFileText(std::string path);
+
+        // 写入文件
+        static void writeFileText(std::string path, std::string text);
+
         // 获取文件最后修改时间
         static time_t getModifiedTime(std::string path);
 

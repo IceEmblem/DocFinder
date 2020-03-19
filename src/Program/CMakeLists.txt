@@ -22,9 +22,9 @@ getSrcFiles("./SourceFiles")
 link_directories(${PROJECT_SOURCE_DIR}/lib)
 
 # 添加一个可执行程序
-add_executable(main ${srcFiles})
+add_executable(IEDocFinder ${srcFiles})
 # 添加库依赖
-target_link_libraries(main DocFind Infrastructure)
+target_link_libraries(IEDocFinder DocFind Infrastructure)
 
 # 只有在 linux 下才生成测试项目
 if(${UNIX})

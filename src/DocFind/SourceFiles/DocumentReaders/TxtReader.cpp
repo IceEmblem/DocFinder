@@ -1,8 +1,10 @@
 #include <vector>
 #include <regex>
-#include <fstream>
 #include <sstream>
 #include "../../HeaderFiles/DocumentReaders/TxtReader.hpp"
+#include "../../../Infrastructure/HeaderFiles/FileOperate.hpp"
+
+using namespace Infrastructure;
 
 namespace DocFind{
     bool TxtReader::isCanReader(std::string docPostfix){
@@ -18,21 +20,7 @@ namespace DocFind{
     }
 
     std::string TxtReader::getDocText(std::string docPath){
-        std::ifstream file;
-        file.open(docPath);
-        if(!file){
-            throw std::logic_error("无法打开文档：" + docPath);
-        }
-
-        // 读取文件
-        file.seekg(0, std::ios::end);
-        int len = file.tellg();
-        char *buffer = new char[len];
-        file.seekg(0,std::ios::beg);
-        file.read(buffer,len);
-        file.close();
-
-        return buffer;
+        return FileOperate::getFileText(docPath);
     }
 
     std::vector<std::string> TxtReader::getDocTitleForText(std::string text)

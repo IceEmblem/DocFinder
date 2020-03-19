@@ -1,37 +1,32 @@
 #include <memory>
 #include <vector>
-#include <fstream>
 #include <sstream>
 #include <regex>
 #include "../HeaderFiles/DocumentOpenerFactory.hpp"
 #include "../HeaderFiles/DocumentOpeners/WordDocOpener.hpp"
 #include "../HeaderFiles/DocumentOpeners/TxtOpener.hpp"
+#include "../HeaderFiles/AppConfiguration.hpp"
 #include "../../Infrastructure/HeaderFiles/FileOperate.hpp"
 #include "../../Infrastructure/HeaderFiles/DirectoriesOperate.hpp"
+
+using namespace Infrastructure;
 
 namespace DocFind
 {
     static std::vector<std::shared_ptr<DocumentOpener>> openers;
 
-    // 可执行程序路径文件相对路径
-    static std::string execPathFileRelativePath = "/DocFinder/ExecPath.txt";
-
     void DocumentOpenerFactory::readExecPathFromFile(){
-        std::string execPathFilePath = _currentPath + execPathFileRelativePath;
-        std::ifstream file;
-        file.open(execPathFilePath);
-
         // 如果文件不存在，则创建文件
-        if(!file){
-            file.close();
+        if(!FileOperate::isExistFile(AppConfiguration::getExecPath(_currentPath))){
+            std::string path = DirectoriesOperate::getDirPath(AppConfiguration::getExecPath(_currentPath));
+            DirectoriesOperate::createDir(path);
 
-            std::string path = Infrastructure::DirectoriesOperate::getDirPath(execPathFilePath);
-            Infrastructure::DirectoriesOperate::createDir(path);
-
-            Infrastructure::FileOperate::createFile(execPathFilePath);
+            FileOperate::createFile(AppConfiguration::getExecPath(_currentPath));
             return;
         }
 
+        std::string text = FileOperate::getFileText(AppConfiguration::getExecPath(_currentPath));
+        std::stringstream file(text);
         std::string line;
         while (std::getline(file, line))
         {
@@ -47,22 +42,20 @@ namespace DocFind
             std::string execPath;
             std::getline(lineStringStram, execPath);
 
-            _execPaths[execName].push_back(ExecPath(execPath, Infrastructure::FileOperate::isExistExecFile(execPath)));
+            _execPaths[execName].push_back(ExecPath(execPath, FileOperate::isExistExecFile(execPath)));
         }
-
-        file.close();
     }
 
     void DocumentOpenerFactory::writeFileFromExecPath(){
-        std::string execPathFilePath = _currentPath + execPathFileRelativePath;
-        std::ofstream file;
-        file.open(execPathFilePath);
+        std::stringstream file;
 
         for(auto execPath:_execPaths){
             for(auto path : execPath.second){
                 file << execPath.first << " " << path.path << std::endl;
             }
         }
+        
+        FileOperate::writeFileText(AppConfiguration::getExecPath(_currentPath), file.str());
     }
 
     DocumentOpenerFactory::DocumentOpenerFactory(std::string current):_currentPath(current){
@@ -100,7 +93,7 @@ namespace DocFind
         }
 
         if(!isExist){
-            _execPaths[execName].push_back(ExecPath(execPath, Infrastructure::FileOperate::isExistExecFile(execPath)));
+            _execPaths[execName].push_back(ExecPath(execPath, FileOperate::isExistExecFile(execPath)));
             writeFileFromExecPath();
         }
     }
@@ -116,7 +109,7 @@ namespace DocFind
     }
 
     OpenResult DocumentOpenerFactory::open(std::string docPath){
-        std::string postfix = Infrastructure::FileOperate::getPostfix(docPath);
+        std::string postfix = FileOperate::getPostfix(docPath);
         if(postfix == "")
         {
             throw std::logic_error("文档不存在后缀，无法找到合适的程序用于打开文档");

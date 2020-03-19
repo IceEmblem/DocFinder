@@ -10,7 +10,7 @@
             "type": "cppdbg",
             "request": "launch",
             // 要启动的可执行程序路径
-            "program": "${workspaceFolder}/bin/main",
+            "program": "${workspaceFolder}/bin/IEDocFinder",
             // 启动时需要的参数
             "args": [],
             "stopAtEntry": false,
@@ -56,31 +56,7 @@
                     "ignoreFailures": true
                 }
             ],
-            "preLaunchTask": "debug"
-        },
-        {
-            "name": "发布",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/bin/main",
-            "args": [],
-            "stopAtEntry": false,
-            "cwd": "${workspaceFolder}",
-            "environment": [],
-            "externalConsole": true,
-            "MIMode": "gdb",
-            // 设置 window 下调试器的路径
-            "windows": {
-                "miDebuggerPath": "gdb.exe" // 调试器的路径，修改为你的安装路径
-            },
-            "setupCommands": [
-                {
-                    "description": "为 gdb 启用整齐打印",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                }
-            ],
-            "preLaunchTask": "release"
+            "preLaunchTask": "test"
         }
     ]
 }

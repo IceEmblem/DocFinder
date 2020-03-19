@@ -3,6 +3,9 @@
 #include <regex>
 #include "../../../DuckX/src/duckx.hpp"
 #include "../../HeaderFiles/DocumentReaders/DocxReader.hpp"
+#include "../../../Infrastructure/HeaderFiles/EncodedTransform.hpp"
+
+using namespace Infrastructure;
 
 namespace DocFind
 {
@@ -18,7 +21,7 @@ namespace DocFind
     }
 
     std::string DocxReader::getDocText(std::string docPath){
-        duckx::Document doc(docPath);   
+        duckx::Document doc(EncodedTransform::UT8ToSystemEncoded(docPath));   
         doc.open();
 
         std::stringstream textStream;
@@ -55,7 +58,7 @@ namespace DocFind
     }
 
     std::vector<std::string> DocxReader::getDocTitle(std::string docPath){
-        duckx::Document doc(docPath);   
+        duckx::Document doc(EncodedTransform::UT8ToSystemEncoded(docPath));   
         doc.open();
 
         std::vector<std::string> titles;

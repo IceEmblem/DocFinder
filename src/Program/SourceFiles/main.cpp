@@ -4,6 +4,7 @@
 #include "../HeaderFiles/CommandManager.hpp"
 #include "../HeaderFiles/CommandContext.hpp"
 #include "../../Infrastructure/HeaderFiles/FileOperate.hpp"
+#include "../../Infrastructure/HeaderFiles/EncodedTransform.hpp"
 
 int main(int argc, char * argv[]){
     std::cout << "欢迎使用文档查找器" << std::endl;
@@ -24,17 +25,18 @@ int main(int argc, char * argv[]){
 
     while (true)
     {
-        std::cout << "> ";
+        std::cout << Infrastructure::EncodedTransform::UT8ToSystemEncoded("> ");
         std::string cmdLine;
         getline(std::cin, cmdLine);
+        cmdLine = Infrastructure::EncodedTransform::SystemEncodedToUT8(cmdLine);
 
         if(cmdLine == "exit"){
             return 0;
         }
 
-        std::cout << "--------开始执行--------" << std::endl << std::endl;
-        std::cout << commandManager.Exec(cmdLine) << std::endl;
-        std::cout << std::endl << "--------结束执行--------" << std::endl;
+        std::cout << Infrastructure::EncodedTransform::UT8ToSystemEncoded("--------开始执行--------") << std::endl << std::endl;
+        std::cout << Infrastructure::EncodedTransform::UT8ToSystemEncoded(commandManager.Exec(cmdLine)) << std::endl;
+        std::cout << std::endl << Infrastructure::EncodedTransform::UT8ToSystemEncoded("--------结束执行--------") << std::endl;
     }
 
     return 0;

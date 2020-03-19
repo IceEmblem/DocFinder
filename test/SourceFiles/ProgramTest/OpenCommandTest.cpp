@@ -1,5 +1,4 @@
 #include <gtest/gtest.h>
-#include <fstream>
 #include "../../../src/Program/HeaderFiles/CommandContext.hpp"
 #include "../../../src/Program/HeaderFiles/OpenCommand.hpp"
 

@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <fstream>
+#include <sstream>
 #include "../../../src/DocFind/HeaderFiles/DocumentManager.hpp"
 #include "../../../src/Infrastructure/HeaderFiles/FileOperate.hpp"
 #include "../../../src/Infrastructure/HeaderFiles/DirectoriesOperate.hpp"
@@ -29,9 +29,11 @@ public:
     // 每个测试用例开始时调用
     void SetUp()
     {
-        // 清理文档
-        ofstream file1(currentDirPath+"/DocFinder/KeyWordToDocs.txt", fstream::out);
-        file1.close();
+        std::string path = currentDirPath+"/DocFinder/KeyWordToDocs.txt";
+        if(FileOperate::isExistFile(path)){
+            // 清理文档
+            FileOperate::writeFileText(path, "");
+        }
     }
 
     // 每个测试用例结束后调用
@@ -65,11 +67,10 @@ TEST_F(DocumentManagerTest, getDocuments)
 TEST_F(DocumentManagerTest, getDocuments_docTitle)
 {
     std::string filePath = currentDirPath + "/getDocuments_docTitle.txt";
-    ofstream file;
-    file.open(filePath);
+    stringstream file;
     file << "title" << std::endl;
     file << "content" << std::endl;
-    file.close();
+    FileOperate::writeFileText(filePath, file.str());
 
     DocumentManager documentManager(currentDirPath);
     auto docs = documentManager.getDocuments();
@@ -96,11 +97,10 @@ TEST_F(DocumentManagerTest, getDocuments_docTitle)
 TEST_F(DocumentManagerTest, getDocuments_docTitle_pathHaveSpace)
 {
     std::string filePath = currentDirPath + "/getDocuments docTitle.txt";
-    ofstream file;
-    file.open(filePath);
+    stringstream file;
     file << "title" << std::endl;
     file << "content" << std::endl;
-    file.close();
+    FileOperate::writeFileText(filePath, file.str());
 
     DocumentManager documentManager(currentDirPath);
     auto docs = documentManager.getDocuments();

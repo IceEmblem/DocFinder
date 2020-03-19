@@ -1,11 +1,13 @@
 #include <string>
 #include <memory>
-#include <fstream>
+#include <sstream>
 #include "../../Infrastructure/HeaderFiles/FileOperate.hpp"
 #include "../../Infrastructure/HeaderFiles/DirectoriesOperate.hpp"
 #include "../HeaderFiles/DocumentManager.hpp"
 #include "../HeaderFiles/Directories.hpp"
 #include "../HeaderFiles/AppConfiguration.hpp"
+
+using namespace Infrastructure;
 
 namespace DocFind
 {
@@ -13,7 +15,7 @@ namespace DocFind
     static int getDocIndexForPath(std::vector<std::shared_ptr<Document>> &docs, std::string path)
     {
         int minIndex = 0;
-        int maxIndex = docs.size();
+        int maxIndex = docs.size() - 1;
         int middleIndex = (minIndex + maxIndex) / 2;
         if((minIndex + maxIndex) % 2 > 0){
             middleIndex++;
@@ -95,19 +97,18 @@ namespace DocFind
         // 实例 keyWordToDocs 列表
         keyWordToDocs = std::make_shared<std::vector<KeyWordToDoc>>(std::vector<KeyWordToDoc>());
 
-        std::ifstream keyWordToDocFile;
-        keyWordToDocFile.open(AppConfiguration::getKeyWordToDocsPath(_dirPath));
-
         // 如果文件不存在，则创建文件
-        if(!keyWordToDocFile){
-            keyWordToDocFile.close();
+        if(!FileOperate::isExistFile(AppConfiguration::getKeyWordToDocsPath(_dirPath))){
+            std::string path = DirectoriesOperate::getDirPath(AppConfiguration::getKeyWordToDocsPath(_dirPath));
+            DirectoriesOperate::createDir(path);
 
-            std::string path = Infrastructure::DirectoriesOperate::getDirPath(AppConfiguration::getKeyWordToDocsPath(_dirPath));
-            Infrastructure::DirectoriesOperate::createDir(path);
-
-            Infrastructure::FileOperate::createFile(AppConfiguration::getKeyWordToDocsPath(_dirPath));
+            FileOperate::createFile(AppConfiguration::getKeyWordToDocsPath(_dirPath));
             return;
         }
+
+        std::string text = FileOperate::getFileText(AppConfiguration::getKeyWordToDocsPath(_dirPath));
+
+        std::stringstream keyWordToDocFile(text);
 
         std::string line;
         while (std::getline(keyWordToDocFile, line))
@@ -131,14 +132,12 @@ namespace DocFind
             KeyWordToDoc keyWordToDoc(path,  keys);
             keyWordToDocs->push_back(keyWordToDoc);
         }
-
-        keyWordToDocFile.close();
     }
 
     // 将KeyWordToDoc写入到文件
     void DocumentManager::writeKeyWordToDocToFile()
     {
-        std::ofstream file(AppConfiguration::getKeyWordToDocsPath(_dirPath));
+        std::stringstream file;
 
         for(auto keyWordToDoc : *keyWordToDocs){
             file << subreplace(keyWordToDoc.relativePath, " ", "%20") + " ";
@@ -149,7 +148,7 @@ namespace DocFind
             file << std::endl;
         }
 
-        file.close();
+        FileOperate::writeFileText(AppConfiguration::getKeyWordToDocsPath(_dirPath), file.str());
     }
 
     // 将关键字添加到文档对象中
@@ -170,20 +169,18 @@ namespace DocFind
     void DocumentManager::readDocTitleFromFile(){
         _documentTitles = std::make_shared<std::map<std::string, DocumentTitle>>();
 
-        std::ifstream file;
-        file.open(AppConfiguration::getDocumentTitlesPath(_dirPath));
-
         // 如果文件不存在，则创建文件
-        if(!file){
-            file.close();
+        if(!FileOperate::isExistFile(AppConfiguration::getDocumentTitlesPath(_dirPath)))
+        {
+            std::string path = DirectoriesOperate::getDirPath(AppConfiguration::getDocumentTitlesPath(_dirPath));
+            DirectoriesOperate::createDir(path);
 
-            std::string path = Infrastructure::DirectoriesOperate::getDirPath(AppConfiguration::getDocumentTitlesPath(_dirPath));
-            Infrastructure::DirectoriesOperate::createDir(path);
-
-            Infrastructure::FileOperate::createFile(AppConfiguration::getDocumentTitlesPath(_dirPath));
+            FileOperate::createFile(AppConfiguration::getDocumentTitlesPath(_dirPath));
             return;
         }
 
+        std::string text = FileOperate::getFileText(AppConfiguration::getDocumentTitlesPath(_dirPath));
+        std::stringstream file(text);
         std::string line;
         while (std::getline(file, line)){
             std::istringstream lineStringStram;
@@ -208,13 +205,11 @@ namespace DocFind
 
             _documentTitles->insert(std::make_pair(path, DocumentTitle(path, lastModifiedTime, titles)));
         }
-
-        file.close();
     }
 
     void DocumentManager::writeDocTitleToFile(){
-        std::ofstream file;
-        file.open(AppConfiguration::getDocumentTitlesPath(_dirPath));
+        std::stringstream file;
+
         for(auto docTitlePair : *_documentTitles){
             auto docTitle = docTitlePair.second;
             file << subreplace(docTitle.relativePath, " ", "%20") + " ";
@@ -226,7 +221,7 @@ namespace DocFind
             file << std::endl;
         }
 
-        file.close();
+        FileOperate::writeFileText(AppConfiguration::getDocumentTitlesPath(_dirPath), file.str());
     }
 
     // 读取文档内容，将文档内容的标题作为关键字添加到文档对象中
@@ -238,7 +233,7 @@ namespace DocFind
             // 没有对应的文档读取器
             // 或者文档是新建的
             if(_documentTitles->find(doc->relativePath) == _documentTitles->end()){
-                auto reader = _documentReaderFactory->getDocumentReader(Infrastructure::FileOperate::getPostfix(doc->relativePath));
+                auto reader = _documentReaderFactory->getDocumentReader(FileOperate::getPostfix(doc->relativePath));
                 if(reader == nullptr){
                     continue;
                 }
@@ -252,7 +247,7 @@ namespace DocFind
             // 如果文件有更新
             if(doc->lastModifiedTime > docTitle.lastModifiedTime){
                 // 更新标题
-                auto reader = _documentReaderFactory->getDocumentReader(Infrastructure::FileOperate::getPostfix(doc->relativePath));
+                auto reader = _documentReaderFactory->getDocumentReader(FileOperate::getPostfix(doc->relativePath));
                 auto titles = reader->getDocTitle(_dirPath + doc->relativePath);
                 docTitle.titles = titles;
                 isNeedUpdateTitleFile = true;
@@ -278,7 +273,7 @@ namespace DocFind
 
         std::map<std::string, bool> childFiles;
         try{
-            childFiles = Infrastructure::DirectoriesOperate::getFiles(_dirPath + relativePath);
+            childFiles = DirectoriesOperate::getFiles(_dirPath + relativePath);
         }
         catch(std::exception&)
         {
@@ -306,7 +301,7 @@ namespace DocFind
                 childs.push_back(std::make_shared<Document>(
                         Document(
                             childFileRelativePath,
-                            Infrastructure::FileOperate::getModifiedTime(_dirPath + childFileRelativePath),
+                            FileOperate::getModifiedTime(_dirPath + childFileRelativePath),
                             childKeys)));
             }
         }

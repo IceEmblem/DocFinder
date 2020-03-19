@@ -1,5 +1,4 @@
 #include <gtest/gtest.h>
-#include <fstream>
 #include "../../../src/Infrastructure/HeaderFiles/DirectoriesOperate.hpp"
 #include "../../../src/DocFind/HeaderFiles/DocFinder.hpp"
 #include "../../../src/Infrastructure/HeaderFiles/FileOperate.hpp"

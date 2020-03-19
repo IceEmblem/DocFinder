@@ -8,7 +8,14 @@
             // 任务的类型
             "type": "shell",
             // 执行的命令
-            "command": "mkdir -p build; cd build; cmake -G 'Unix Makefiles' -DCMAKE_BUILD_TYPE=Debug ..; make;"
+            "command": "mkdir -p build; cd build; cmake -G 'Unix Makefiles' -DCMAKE_BUILD_TYPE=Debug -DUSETEST=off ..; make;"
+        },
+        {
+            "label": "test",
+            // 任务的类型
+            "type": "shell",
+            // 执行的命令
+            "command": "mkdir -p build; cd build; cmake -G 'Unix Makefiles' -DCMAKE_BUILD_TYPE=Debug -DUSETEST=on ..; make;"
         },
         {
             "label": "release",

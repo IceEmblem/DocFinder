@@ -2,6 +2,7 @@
 #include <string.h>
 #include <regex>
 #include "../HeaderFiles/DirectoriesOperate.hpp"
+#include "../HeaderFiles/EncodedTransform.hpp"
 
 #ifdef _WIN32
 // windows
@@ -14,13 +15,16 @@ namespace Infrastructure
         WIN32_FIND_DATA wfd;
         std::map<std::string, bool> files;
 
+        szPath = EncodedTransform::UT8ToSystemEncoded(szPath);
         HANDLE hFind = FindFirstFile(szPath.c_str(), &wfd) ;
         do
         {
-            if(std::string(wfd.cFileName) == "." || std::string(wfd.cFileName) == ".."){
+            std::string fileName = std::string(wfd.cFileName);
+            fileName = EncodedTransform::SystemEncodedToUT8(fileName);
+            if(fileName == "." || fileName == ".."){
                 continue;
             }
-            files[wfd.cFileName] = wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY;
+            files[fileName] = wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY;
         } while (FindNextFile(hFind, &wfd));
         FindClose(hFind);
 
@@ -38,11 +42,16 @@ namespace Infrastructure
 
         DIR *pDir = nullptr;
         struct dirent* ptr;
+
+        dirPath = EncodedTransform::UT8ToSystemEncoded(dirPath);
         if(!(pDir = opendir(dirPath.c_str())))
             return files;
+        
         while((ptr = readdir(pDir))!=0) {
-            if (strcmp(ptr->d_name, ".") != 0 && strcmp(ptr->d_name, "..") != 0)
-                files[ptr->d_name] = ptr->d_type == DT_DIR;
+            std::string fileName = ptr->d_name;
+            fileName = EncodedTransform::SystemEncodedToUT8(fileName);
+            if (strcmp(fileName.c_str(), ".") != 0 && strcmp(fileName.c_str(), "..") != 0)
+                files[fileName.c_str()] = ptr->d_type == DT_DIR;
         }
         closedir(pDir);
 
@@ -81,8 +90,8 @@ namespace Infrastructure
             }
         #endif
 
-        std::string command = "mkdir \"" + dirPath + "\"";  
-        system(command.c_str());
+        std::string command = "mkdir \"" + dirPath + "\"";
+        system(EncodedTransform::UT8ToSystemEncoded(command).c_str());
     }
 
     std::string DirectoriesOperate::getDirPath(std::string filePath)

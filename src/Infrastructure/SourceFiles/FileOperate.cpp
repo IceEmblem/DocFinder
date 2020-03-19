@@ -3,10 +3,11 @@
 #include <cstdlib>
 #include <memory>
 #include "../HeaderFiles/FileOperate.hpp"
+#include "../HeaderFiles/EncodedTransform.hpp"
 
 namespace Infrastructure {
     bool FileOperate::isExistFile(std::string path){
-        std::ifstream f(path);
+        std::ifstream f(EncodedTransform::UT8ToSystemEncoded(path));
         return f.good();
     }
 
@@ -16,7 +17,7 @@ namespace Infrastructure {
         if(envPaths == nullptr){
             envPaths = std::make_shared<std::vector<std::string>>();
 
-            std::string envPathString = std::getenv("PATH");
+            std::string envPathString = EncodedTransform::SystemEncodedToUT8(std::getenv("PATH"));
             // 分割符
             std::string separation;
             #ifdef _WIN32
@@ -77,7 +78,38 @@ namespace Infrastructure {
 
     void FileOperate::createFile(std::string path){
         std::ofstream file;
-        file.open(path, std::fstream::out);
+        file.open(EncodedTransform::UT8ToSystemEncoded(path), std::fstream::out);
+        file.close();
+    }
+
+    std::string FileOperate::getFileText(std::string path){
+        std::ifstream file;
+        file.open(EncodedTransform::UT8ToSystemEncoded(path));
+
+        if(!file){
+            throw std::logic_error("无法打开文档：" + path);
+        }
+
+        // 读取文件
+        file.seekg(0, std::ios::end);
+        int len = file.tellg();
+        char *buffer = new char[len];
+        file.seekg(0,std::ios::beg);
+        file.read(buffer,len);
+        file.close();
+
+        return buffer;
+    }
+
+    void FileOperate::writeFileText(std::string path, std::string text){
+        std::ofstream file;
+        file.open(EncodedTransform::UT8ToSystemEncoded(path));
+
+        if(!file){
+            throw std::logic_error("无法打开文档：" + path);
+        }
+
+        file << text;
         file.close();
     }
 
@@ -136,7 +168,7 @@ namespace Infrastructure
 
     time_t FileOperate::getModifiedTime(std::string path){
         WIN32_FIND_DATA wfd;
-        HANDLE hFind = FindFirstFile(path.c_str(), &wfd);
+        HANDLE hFind = FindFirstFile(EncodedTransform::UT8ToSystemEncoded(path).c_str(), &wfd);
 
         return FileTimeToTime_t(wfd.ftLastWriteTime);
     }
@@ -150,7 +182,7 @@ namespace Infrastructure
     time_t FileOperate::getModifiedTime(std::string path){
         struct stat buf;
         FILE *pFile;
-        pFile = fopen(path.c_str(), "r");
+        pFile = fopen(EncodedTransform::UT8ToSystemEncoded(path).c_str(), "r");
         int fd = fileno(pFile);
         fstat(fd, &buf);
         long time = buf.st_mtime;

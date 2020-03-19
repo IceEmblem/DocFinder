@@ -1,5 +1,4 @@
 #include <gtest/gtest.h>
-#include <fstream>
 #include <sstream>
 #include "../../../src/DocFind/HeaderFiles/DocumentReaders/TxtReader.hpp"
 #include "../../../src/Infrastructure/HeaderFiles/DirectoriesOperate.hpp"
@@ -37,10 +36,9 @@ public:
 
 TEST_F(TxtReaderTest, getDocTextTest){
     std::string testFile = programPath + "/testFile";
-    std::ofstream file;
-    file.open(testFile);
+    std::stringstream file;
     file << "ABCDEF";
-    file.close();
+    FileOperate::writeFileText(testFile, file.str());
 
     TxtReader txtReader;
     std::string text = txtReader.getDocText(testFile);
