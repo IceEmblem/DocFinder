@@ -229,15 +229,24 @@ namespace DocFind
         // 是否需要更新存放标题的文件
         bool isNeedUpdateTitleFile = false;
         for(auto doc : docs){
-            // 如果 _documentTitles 中不存在，则说明
-            // 没有对应的文档读取器
-            // 或者文档是新建的
+
+            // 如果 _documentTitles 中不存在
             if(_documentTitles->find(doc->relativePath) == _documentTitles->end()){
                 auto reader = _documentReaderFactory->getDocumentReader(FileOperate::getPostfix(doc->relativePath));
+                // 没有对应的文档读取器
                 if(reader == nullptr){
                     continue;
                 }
-                auto titles = reader->getDocTitle(_dirPath + doc->relativePath);
+                
+                // 说明文档是新建的
+                std::vector<std::string> titles;
+                try{
+                    titles = reader->getDocTitle(_dirPath + doc->relativePath);
+                }
+                catch(std::exception& ex){
+                    continue;
+                }
+
                 _documentTitles->insert(std::make_pair(doc->relativePath, DocumentTitle(doc->relativePath, doc->lastModifiedTime, titles)));
                 isNeedUpdateTitleFile = true;
             }
@@ -248,7 +257,15 @@ namespace DocFind
             if(doc->lastModifiedTime > docTitle.lastModifiedTime){
                 // 更新标题
                 auto reader = _documentReaderFactory->getDocumentReader(FileOperate::getPostfix(doc->relativePath));
-                auto titles = reader->getDocTitle(_dirPath + doc->relativePath);
+
+                std::vector<std::string> titles;
+                try{
+                    titles = reader->getDocTitle(_dirPath + doc->relativePath);
+                }
+                catch(std::exception& ex){
+                    continue;
+                }
+
                 docTitle.titles = titles;
                 isNeedUpdateTitleFile = true;
             }

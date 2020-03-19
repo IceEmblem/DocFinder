@@ -4,6 +4,7 @@
 #include "../../../DuckX/src/duckx.hpp"
 #include "../../HeaderFiles/DocumentReaders/DocxReader.hpp"
 #include "../../../Infrastructure/HeaderFiles/EncodedTransform.hpp"
+#include "../../../Infrastructure/HeaderFiles/FileOperate.hpp"
 
 using namespace Infrastructure;
 
@@ -21,6 +22,11 @@ namespace DocFind
     }
 
     std::string DocxReader::getDocText(std::string docPath){
+        // 以 ~ 开头的是临时文档
+        if(FileOperate::getFileName(docPath).find("~") == 0){
+            return "";
+        }
+
         duckx::Document doc(EncodedTransform::UT8ToSystemEncoded(docPath));   
         doc.open();
 
@@ -58,10 +64,18 @@ namespace DocFind
     }
 
     std::vector<std::string> DocxReader::getDocTitle(std::string docPath){
-        duckx::Document doc(EncodedTransform::UT8ToSystemEncoded(docPath));   
-        doc.open();
-
         std::vector<std::string> titles;
+
+        // 以 ~ 开头的是临时文档
+        if(FileOperate::getFileName(docPath).find("~") == 0){
+            return titles;
+        }
+
+        duckx::Document doc(EncodedTransform::UT8ToSystemEncoded(docPath));   
+        if(!doc.open()){
+            return titles;
+        }
+        
         for (auto p = doc.paragraphs(); p.has_next() ; p.next()) {
             std::string text = getParagraphText(p);
 

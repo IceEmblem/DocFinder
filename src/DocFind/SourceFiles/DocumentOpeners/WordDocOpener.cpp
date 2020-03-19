@@ -1,5 +1,8 @@
 #include <vector>
 #include "../../HeaderFiles/DocumentOpeners/WordDocOpener.hpp"
+#include "../../../Infrastructure/HeaderFiles/EncodedTransform.hpp"
+
+using namespace Infrastructure;
 
 namespace DocFind {
     static std::vector<std::string> wordPostfixs = {"doc", "docx"};
@@ -14,6 +17,6 @@ namespace DocFind {
     }
 
     void WordDocOpener::open(std::string docPath, std::string execPath) const{
-        system(createCommandCmd(docPath, execPath).c_str());
+        system(EncodedTransform::UT8ToSystemEncoded(createCommandCmd(docPath, execPath)).c_str());
     }
 }

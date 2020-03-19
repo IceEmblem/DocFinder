@@ -148,7 +148,7 @@ namespace duckx {
         Document();
         Document(std::string);
         void file(std::string);
-        void open();
+        bool open();
         void save() const;
 
         Paragraph &paragraphs();

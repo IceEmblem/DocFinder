@@ -1,5 +1,8 @@
 #include <vector>
 #include "../../HeaderFiles/DocumentOpeners/TxtOpener.hpp"
+#include "../../../Infrastructure/HeaderFiles/EncodedTransform.hpp"
+
+using namespace Infrastructure;
 
 namespace DocFind {
 
@@ -15,6 +18,6 @@ namespace DocFind {
     }
 
     void TxtOpener::open(std::string docPath, std::string execPath) const{
-        system(createCommandCmd(docPath, execPath).c_str());
+        system(EncodedTransform::UT8ToSystemEncoded(createCommandCmd(docPath, execPath)).c_str());
     }
 }

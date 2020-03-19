@@ -268,7 +268,7 @@ void duckx::Document::file(std::string directory) {
     this->directory = directory;
 }
 
-void duckx::Document::open() {
+bool duckx::Document::open() {
     void *buf = NULL;
     size_t bufsize;
 
@@ -281,6 +281,10 @@ void duckx::Document::open() {
     zip_entry_close(zip);
     zip_close(zip);
 
+    if(!buf){
+        return false;
+    }
+
     this->document.load_string(
         (char *) buf
     );
@@ -290,6 +294,8 @@ void duckx::Document::open() {
     this->paragraph.set_parent(
         document.child("w:document").child("w:body")
     );
+
+    return true;
 }
 
 void duckx::Document::save() const {
