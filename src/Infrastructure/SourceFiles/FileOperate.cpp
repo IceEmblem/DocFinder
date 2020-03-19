@@ -4,6 +4,7 @@
 #include <memory>
 #include "../HeaderFiles/FileOperate.hpp"
 #include "../HeaderFiles/EncodedTransform.hpp"
+#include "../HeaderFiles/PathOperate.hpp"
 
 namespace Infrastructure {
     bool FileOperate::isExistFile(std::string path){

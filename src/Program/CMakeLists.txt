@@ -26,10 +26,9 @@ add_executable(IEDocFinder ${srcFiles})
 # 添加库依赖
 target_link_libraries(IEDocFinder DocFind Infrastructure)
 
-# 只有在 linux 下才生成测试项目
-if(${UNIX})
-    # 为了单元测试main需要生成一个库文件
+if(USETEST)
+    # 为了单元测试需要生成一个库文件
     set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/test/lib)
     add_library(ProgramTestLib ${srcFiles})
     target_link_libraries(ProgramTestLib DocFind Infrastructure)
-endif(${UNIX})
+endif(USETEST)

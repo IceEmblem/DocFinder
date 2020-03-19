@@ -1,65 +1,84 @@
 #include <vector>
+#include <locale>
 #include "../HeaderFiles/EncodedTransform.hpp"
 
+#ifdef _WIN32
 
-static std::string gb2312_to_utf8(std::string& src)
+#include <windows.h>
+
+std::string GbkToUtf8(std::string src)
 {
-    std::vector<wchar_t> buff(src.size());
-    #ifdef _MSC_VER
-    std::locale loc("zh-CN");
-    #else
-    std::locale loc("zh_CN.GB18030");
-    #endif
-    wchar_t* pwszNext = nullptr;
-    const char* pszNext = nullptr;
-    mbstate_t state = {};
-    int res = std::use_facet<std::codecvt<wchar_t, char, mbstate_t> >
-    (loc).in(state,
-    src.data(), src.data() + src.size(), pszNext,
-    buff.data(), buff.data() + buff.size(), pwszNext);
-
-    if (std::codecvt_base::ok == res)
-    {
-    std::wstring_convert<std::codecvt_utf8<wchar_t>> cutf8;
-    return cutf8.to_bytes(std::wstring(buff.data(), pwszNext));
-    }
-
-    return "";
+    const char *src_str = src.c_str();
+	int len = MultiByteToWideChar(CP_ACP, 0, src_str, -1, NULL, 0);
+	wchar_t* wstr = new wchar_t[len + 1];
+	memset(wstr, 0, len + 1);
+	MultiByteToWideChar(CP_ACP, 0, src_str, -1, wstr, len);
+	len = WideCharToMultiByte(CP_UTF8, 0, wstr, -1, NULL, 0, NULL, NULL);
+	char* str = new char[len + 1];
+	memset(str, 0, len + 1);
+	WideCharToMultiByte(CP_UTF8, 0, wstr, -1, str, len, NULL, NULL);
+	std::string strTemp = str;
+	if (wstr) delete[] wstr;
+	if (str) delete[] str;
+	return strTemp;
 }
 
-static std::string utf8_to_gb2312(std::string& src)
+std::string Utf8ToGbk(std::string src)
 {
-    std::wstring_convert<std::codecvt_utf8<wchar_t>> cutf8;
-    std::wstring wTemp = cutf8.from_bytes(src);
-    #ifdef _MSC_VER
-    std::locale loc("zh-CN");
-    #else
-    std::locale loc("zh_CN.GB18030");
-    #endif
-    const wchar_t* pwszNext = nullptr;
-    char* pszNext = nullptr;
-    mbstate_t state = {};
+    const char *src_str = src.c_str();
 
-    std::vector<char> buff(wTemp.size() * 2);
-    int res = std::use_facet<std::codecvt<wchar_t, char, mbstate_t> >
-    (loc).out(state,
-    wTemp.data(), wTemp.data() + wTemp.size(), pwszNext,
-    buff.data(), buff.data() + buff.size(), pszNext);
-
-    if (std::codecvt_base::ok == res)
-    {
-    return std::string(buff.data(), pszNext);
-    }
-    return "";
+	int len = MultiByteToWideChar(CP_UTF8, 0, src_str, -1, NULL, 0);
+	wchar_t* wszGBK = new wchar_t[len + 1];
+	memset(wszGBK, 0, len * 2 + 2);
+	MultiByteToWideChar(CP_UTF8, 0, src_str, -1, wszGBK, len);
+	len = WideCharToMultiByte(CP_ACP, 0, wszGBK, -1, NULL, 0, NULL, NULL);
+	char* szGBK = new char[len + 1];
+	memset(szGBK, 0, len + 1);
+	WideCharToMultiByte(CP_ACP, 0, wszGBK, -1, szGBK, len, NULL, NULL);
+	std::string strTemp(szGBK);
+	if (wszGBK) delete[] wszGBK;
+	if (szGBK) delete[] szGBK;
+    
+	return strTemp;
 }
+#else
+#include <iconv.h>
+
+int code_convert(char *from_charset, char *to_charset, char *inbuf, size_t inlen,  
+        char *outbuf, size_t outlen) {  
+    iconv_t cd;  
+    char **pin = &inbuf;  
+    char **pout = &outbuf;  
+  
+    cd = iconv_open(to_charset, from_charset);  
+    if (cd == 0)  
+        return -1;  
+    memset(outbuf, 0, outlen);  
+    if (iconv(cd, pin, &inlen, pout, &outlen) == -1)  
+        return -1;  
+    iconv_close(cd);  
+    *pout = '\0';  
+  
+    return 0;  
+}  
+  
+int u2g(char *inbuf, size_t inlen, char *outbuf, size_t outlen) {  
+    return code_convert("utf-8", "gb2312", inbuf, inlen, outbuf, outlen);  
+}  
+  
+int g2u(char *inbuf, size_t inlen, char *outbuf, size_t outlen) {  
+    return code_convert("gb2312", "utf-8", inbuf, inlen, outbuf, outlen);  
+} 
+#endif
+
 namespace Infrastructure{
     #ifdef _SysEncodeGBK
     std::string EncodedTransform::SystemEncodedToUT8(std::string src){
-        return gb2312_to_utf8(src);
+        return GbkToUtf8(src);
     }
 
     std::string EncodedTransform::UT8ToSystemEncoded(std::string src){
-        return utf8_to_gb2312(src);
+        return Utf8ToGbk(src);
     }
     #endif
 

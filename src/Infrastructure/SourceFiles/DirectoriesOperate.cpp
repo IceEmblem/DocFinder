@@ -3,6 +3,7 @@
 #include <regex>
 #include "../HeaderFiles/DirectoriesOperate.hpp"
 #include "../HeaderFiles/EncodedTransform.hpp"
+#include "../HeaderFiles/PathOperate.hpp"
 
 #ifdef _WIN32
 // windows
@@ -11,12 +12,12 @@ namespace Infrastructure
 {
     std::map<std::string, bool> DirectoriesOperate::getFiles(std::string dirPath)
     {
-        std::string szPath = dirPath + "/*.*";
+        dirPath = PathOperate::pathConvertHandle(dirPath);
+        std::string szPath = dirPath + "\\*.*";
         WIN32_FIND_DATA wfd;
         std::map<std::string, bool> files;
 
-        szPath = EncodedTransform::UT8ToSystemEncoded(szPath);
-        HANDLE hFind = FindFirstFile(szPath.c_str(), &wfd) ;
+        HANDLE hFind = FindFirstFile(EncodedTransform::UT8ToSystemEncoded(szPath).c_str(), &wfd) ;
         do
         {
             std::string fileName = std::string(wfd.cFileName);
@@ -38,6 +39,7 @@ namespace Infrastructure
 {
     std::map<std::string, bool> DirectoriesOperate::getFiles(std::string dirPath)
     {
+        dirPath = pathConvertHandle(dirPath);
         std::map<std::string, bool> files;
 
         DIR *pDir = nullptr;
@@ -57,8 +59,6 @@ namespace Infrastructure
 
         return files;
     }
-
-
 }
 #endif
 
@@ -71,24 +71,16 @@ namespace Infrastructure
 namespace Infrastructure
 {
     bool DirectoriesOperate::isExitDir(std::string dirPath){
-        return access(dirPath.c_str(), F_OK) == 0;
+        dirPath = PathOperate::pathConvertHandle(dirPath);
+        return access(EncodedTransform::UT8ToSystemEncoded(dirPath).c_str(), F_OK) == 0;
     }
 
     void DirectoriesOperate::createDir(std::string dirPath)
     {
+        dirPath = PathOperate::pathConvertHandle(dirPath);
         if(isExitDir(dirPath)){
             return;
         }
-        
-        #ifdef _WIN32
-            // 替换字符串中的 "/" 为 "\"
-            int pos;
-            pos = dirPath.find("/");
-            while(pos != -1){
-                dirPath.replace(pos, 1, "\\");
-                pos = dirPath.find("/");
-            }
-        #endif
 
         std::string command = "mkdir \"" + dirPath + "\"";
         system(EncodedTransform::UT8ToSystemEncoded(command).c_str());
@@ -96,6 +88,8 @@ namespace Infrastructure
 
     std::string DirectoriesOperate::getDirPath(std::string filePath)
     {
+        filePath = PathOperate::pathConvertHandle(filePath);
+        
         std::string path;
         static std::regex nameRegex("(.*?)(\\\\|/)[^\\\\/]*?$");
         std::smatch sresult;
