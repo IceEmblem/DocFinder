@@ -48,16 +48,16 @@ public:
 // 测试用例，用例名为 FindTest
 TEST_F(DocFinderTest, FindTest)
 {
-    auto results = docFinder->find({ "DocFinderTestFile1" });
+    auto results = docFinder->find({ "DocFinderTestFile1" }).docResults;
 
     EXPECT_EQ(results.size(), 1);
     EXPECT_EQ(results[0].document->name, "Pre_DocFinderTestFile1.txt");
 
     // 不区分大小写测试
-    results = docFinder->find({ "file1" });
+    results = docFinder->find({ "file1" }).docResults;
     EXPECT_EQ(results[0].document->name, "Pre_DocFinderTestFile1.txt");
 
     // 中文测试
-    results = docFinder->find({ "文件3" });
+    results = docFinder->find({ "文件3" }).docResults;
     EXPECT_EQ(results[0].document->name, "测试文件3.txt");
 }

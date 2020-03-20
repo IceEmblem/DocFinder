@@ -39,7 +39,7 @@ namespace Infrastructure
 {
     std::map<std::string, bool> DirectoriesOperate::getFiles(std::string dirPath)
     {
-        dirPath = pathConvertHandle(dirPath);
+        dirPath = PathOperate::pathConvertHandle(dirPath);
         std::map<std::string, bool> files;
 
         DIR *pDir = nullptr;

@@ -42,6 +42,7 @@ std::string Utf8ToGbk(std::string src)
 	return strTemp;
 }
 #else
+#include <string.h>
 #include <iconv.h>
 
 int code_convert(char *from_charset, char *to_charset, char *inbuf, size_t inlen,  
@@ -57,7 +58,7 @@ int code_convert(char *from_charset, char *to_charset, char *inbuf, size_t inlen
     if (iconv(cd, pin, &inlen, pout, &outlen) == -1)  
         return -1;  
     iconv_close(cd);  
-    *pout = '\0';  
+    *pout = "";  
   
     return 0;  
 }  

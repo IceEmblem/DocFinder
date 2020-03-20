@@ -64,5 +64,5 @@ TEST_F(CommandManagerTest, execTest) {
 
 TEST_F(CommandManagerTest, nextTest) {
     string result = commandManager->Exec("nexttest");
-    EXPECT_EQ(result, "nextcmd");
+    EXPECT_EQ(result.find("nextcmd") != result.npos, true);
 }
