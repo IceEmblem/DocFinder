@@ -12,7 +12,7 @@ namespace DocFind
     private:
         /* data */
     public:
-        Document(std::string relativePath, time_t lastModifiedTime, std::vector<std::string> parentKeys):DFFile(relativePath, false, parentKeys)
+        Document(std::string relativePath, time_t lastModifiedTime, std::vector<std::string> parentKeys):DFFile(relativePath, false, parentKeys), lastModifiedTime(lastModifiedTime)
         {
         }
 
