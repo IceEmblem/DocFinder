@@ -15,18 +15,22 @@ namespace DocFind
         _documentOpenerFactory = std::make_shared<DocumentOpenerFactory>(DocumentOpenerFactory(dirPath));
     }
 
-    // 添加关键字到文档
-    void DocFinder::addKeyWordToDoc(std::vector<std::string> keys, std::shared_ptr<Document> doc) const 
-    {
+    void DocFinder::addKeyWordToDoc(std::vector<std::string> keys, std::string docRelativePath) const {
         for(auto key : keys){
-            _documentManager->addKeyWordToDoc(key, doc->relativePath);
+            _documentManager->addKeyWordToDoc(key, docRelativePath);
         }
     }
 
-    // 根据关键字查找文档
-    std::vector<std::shared_ptr<Document>> getDocForKey(std::vector<std::shared_ptr<Document>> docs, std::string key)
+    // 添加关键字到文档
+    void DocFinder::addKeyWordToDoc(std::vector<std::string> keys, std::shared_ptr<Document> doc) const 
     {
-        std::vector<std::shared_ptr<Document>> results;
+        addKeyWordToDoc(keys, doc->relativePath);
+    }
+
+    // 根据关键字查找文档
+    std::vector<std::pair<std::shared_ptr<Document>, std::string>> getDocForKey(std::vector<std::shared_ptr<Document>> docs, std::string key)
+    {
+        std::vector<std::pair<std::shared_ptr<Document>, std::string>> results;
 
         for(auto doc : docs){
             for(auto docKey : doc->keys){
@@ -36,7 +40,8 @@ namespace DocFind
                 std::transform(docKey.begin(), docKey.end(), docKeyLower.begin(), ::tolower);
                 std::transform(key.begin(), key.end(), keyLower.begin(), ::tolower);
                 if(docKeyLower.find(keyLower) != docKeyLower.npos){
-                    results.push_back(doc);
+                    std::pair<std::shared_ptr<Document>, std::string> p(doc, docKey);
+                    results.push_back(p);
                     break;
                 }
             }
@@ -45,20 +50,39 @@ namespace DocFind
         return results;
     }
 
-    std::vector<FindResult> DocFinder::find(std::vector<std::string> keys) const
+    FindResult DocFinder::find(std::vector<std::string> keys) const
     {
         std::vector<std::shared_ptr<Document>> docs = _documentManager->getDocuments();
+        std::vector<std::pair<std::shared_ptr<Document>, std::string>> docAndKeys;
+        std::string newKey;
         for(auto key : keys){
-            docs = getDocForKey(docs, key);
+            auto newDocAndKeys = getDocForKey(docs, key);
+
+            // 如果查找结果为 0，则放弃该次查找，接着查找下一关键字
+            if(newDocAndKeys.size() == 0){
+                newKey = key;
+                continue;
+            }
+            
+            docs = std::vector<std::shared_ptr<Document>>();
+            for(auto docAndKey : newDocAndKeys){
+                docs.push_back(docAndKey.first);
+            }
+
+            docAndKeys = newDocAndKeys;
         }
         
-        std::vector<FindResult> results;
-        for(auto doc : docs){
-            FindResult result(doc, "");
+        std::vector<FindDocResult> results;
+        for(auto docAndKey : docAndKeys){
+            FindDocResult result(docAndKey.first, docAndKey.second);
             results.push_back(result);
         }
 
-        return results;
+        FindResult findResult;
+        findResult.docResults = results;
+        findResult.newKey = newKey;
+
+        return findResult;
     }
 
     OpenResult DocFinder::open(std::shared_ptr<Document> doc) const

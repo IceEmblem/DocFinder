@@ -12,13 +12,19 @@
 
 namespace DocFind
 {
-    class FindResult
+    class FindDocResult
     {
     public:
-        FindResult(std::shared_ptr<Document> doc, std::string matchText) : document(doc), matchText(matchText) { }
+        FindDocResult(std::shared_ptr<Document> doc, std::string matchText) : document(doc), matchText(matchText) { }
 
         std::string matchText;
         std::shared_ptr<Document> document;
+    };
+
+    class FindResult {
+    public:
+        std::vector<FindDocResult> docResults;
+        std::string newKey;
     };
 
     class DocFinder
@@ -36,9 +42,10 @@ namespace DocFind
     public:
         DocFinder(std::string dirPath);
 
+        void addKeyWordToDoc(std::vector<std::string> keys, std::string docRelativePath) const;
         void addKeyWordToDoc(std::vector<std::string> keys, std::shared_ptr<Document> doc) const;
 
-        std::vector<FindResult> find(std::vector<std::string> keys) const;
+        FindResult find(std::vector<std::string> keys) const;
 
         OpenResult open(std::shared_ptr<Document> doc) const;
 
