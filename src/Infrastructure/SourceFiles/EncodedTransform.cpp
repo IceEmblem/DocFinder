@@ -2,11 +2,13 @@
 #include <locale>
 #include "../HeaderFiles/EncodedTransform.hpp"
 
+using namespace Infrastructure;
+
 #ifdef _WIN32
 
 #include <windows.h>
 
-std::string GbkToUtf8(std::string src)
+std::string EncodedTransform::GBKToUTF8(std::string src)
 {
     const char *src_str = src.c_str();
 	int len = MultiByteToWideChar(CP_ACP, 0, src_str, -1, NULL, 0);
@@ -23,7 +25,7 @@ std::string GbkToUtf8(std::string src)
 	return strTemp;
 }
 
-std::string Utf8ToGbk(std::string src)
+std::string EncodedTransform::UTF8ToGBK(std::string src)
 {
     const char *src_str = src.c_str();
 
@@ -45,8 +47,12 @@ std::string Utf8ToGbk(std::string src)
 #include <string.h>
 #include <iconv.h>
 
-int code_convert(char *from_charset, char *to_charset, char *inbuf, size_t inlen,  
-        char *outbuf, size_t outlen) {  
+int code_convert(
+        char *from_charset, char *to_charset, 
+        char *inbuf, 
+        size_t inlen,  
+        char *outbuf, 
+        size_t outlen) {  
     iconv_t cd;  
     char **pin = &inbuf;  
     char **pout = &outbuf;  
@@ -54,32 +60,46 @@ int code_convert(char *from_charset, char *to_charset, char *inbuf, size_t inlen
     cd = iconv_open(to_charset, from_charset);  
     if (cd == 0)  
         return -1;  
-    memset(outbuf, 0, outlen);  
+    memset(outbuf, '\0', outlen);  
     if (iconv(cd, pin, &inlen, pout, &outlen) == -1)  
         return -1;  
     iconv_close(cd);  
     *pout = "";  
   
     return 0;  
-}  
-  
-int u2g(char *inbuf, size_t inlen, char *outbuf, size_t outlen) {  
-    return code_convert("utf-8", "gb2312", inbuf, inlen, outbuf, outlen);  
-}  
-  
-int g2u(char *inbuf, size_t inlen, char *outbuf, size_t outlen) {  
-    return code_convert("gb2312", "utf-8", inbuf, inlen, outbuf, outlen);  
-} 
+}
+
+std::string EncodedTransform::GBKToUTF8(std::string src){
+    size_t utf8Length = (src.size() / 2) * 3 + 1;
+    char outbuf[utf8Length];
+    if(code_convert("gb2312", "utf-8", const_cast<char *>(src.c_str()), src.size(), outbuf, utf8Length)==-1)
+    {
+        return "";
+    }
+
+    return outbuf;
+}
+
+std::string EncodedTransform::UTF8ToGBK(std::string src){
+    size_t gbkLength = src.size() + 1;
+    char outbuf[gbkLength];
+    if(code_convert("utf-8", "gb2312", const_cast<char *>(src.c_str()), src.size(), outbuf, gbkLength) == -1)
+    {
+        return "";
+    }
+
+    return outbuf;
+}
 #endif
 
 namespace Infrastructure{
     #ifdef _SysEncodeGBK
     std::string EncodedTransform::SystemEncodedToUT8(std::string src){
-        return GbkToUtf8(src);
+        return GBKToUTF8(src);
     }
 
     std::string EncodedTransform::UT8ToSystemEncoded(std::string src){
-        return Utf8ToGbk(src);
+        return UTF8ToGBK(src);
     }
     #endif
 
