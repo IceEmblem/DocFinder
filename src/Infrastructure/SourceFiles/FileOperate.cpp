@@ -95,6 +95,7 @@ namespace Infrastructure {
         file.seekg(0, std::ios::end);
         int len = file.tellg();
         char *buffer = new char[len];
+        std::uninitialized_fill_n(buffer, len, '\0');
         file.seekg(0,std::ios::beg);
         file.read(buffer,len);
         file.close();
