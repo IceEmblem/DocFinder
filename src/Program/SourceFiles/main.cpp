@@ -11,7 +11,7 @@ using namespace Infrastructure;
 int main(int argc, char * argv[]){
     std::cout << EncodedTransform::UT8ToSystemEncoded("欢迎使用文档查找器") << std::endl;
     std::cout << EncodedTransform::UT8ToSystemEncoded("该程序由 IceEmblem 所编写") << std::endl;
-    std::cout << EncodedTransform::UT8ToSystemEncoded("输入 exit 退出程序") << std::endl << std::endl;
+    std::cout << EncodedTransform::UT8ToSystemEncoded("输入 exit 退出程序，输入 help 获取帮助文档") << std::endl << std::endl;
 
     std::string programPath;
     if(argc > 0){
@@ -35,6 +35,11 @@ int main(int argc, char * argv[]){
 
         if(cmdLine == "exit"){
             return 0;
+        }
+
+        if(cmdLine == "help"){
+            std::cout << std::endl << EncodedTransform::UT8ToSystemEncoded(commandManager.help());
+            continue;
         }
 
         std::cout << EncodedTransform::UT8ToSystemEncoded("--------开始执行--------") << std::endl << std::endl;

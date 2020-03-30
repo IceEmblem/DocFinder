@@ -1,5 +1,6 @@
 #include <vector>
 #include <string>
+#include <sstream>
 #include <regex>
 #include <algorithm>
 #include "../HeaderFiles/CommandManager.hpp"
@@ -80,4 +81,13 @@ std::string CommandManager::Exec(std::string cmdLine){
     result = result + "\n" + Exec(nextCmdLine);
 
     return result;
+}
+
+std::string CommandManager::help(){
+    std::stringstream text;
+    for(auto command : _commands){
+        text << command->help() << std::endl;
+    }
+
+    return text.str();
 }

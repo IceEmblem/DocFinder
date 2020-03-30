@@ -14,6 +14,8 @@ public:
     }
 
     std::string exec(std::string commandName, std::string paramStr, std::string & nextCmd);
+
+    std::string help();
 };
 
 #endif

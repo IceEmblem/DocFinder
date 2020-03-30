@@ -19,6 +19,9 @@ public:
     // 执行命令
     std::string Exec(std::string cmdLine);
 
+    // 获取帮助文档
+    std::string help();
+
     // 获取命令
     std::shared_ptr<Command> GetCommand(std::string commandName);
 };

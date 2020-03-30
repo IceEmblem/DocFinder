@@ -42,3 +42,13 @@ std::string OpenCommand::exec(std::string command, std::string paramStr, std::st
         return rgt(paramStr, nextCmd);
     }
 }
+
+std::string OpenCommand::help(){
+    std::stringstream text;
+    text << "名称：open" << std::endl;
+    text << "描述：打开文档" << std::endl;
+    text << "格式：open + 空格 + 文档相对路径" << std::endl;
+    text << "示例：open /text.txt" << std::endl;
+
+    return text.str();
+}

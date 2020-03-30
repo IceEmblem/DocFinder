@@ -25,3 +25,13 @@ std::string RegisterCommand::exec(std::string command, std::string paramStr, std
     CommandContext::Instances()->docFinder->registerExecPath(execName, execPath);
     return "已注册程序路径：" + execPath;
 }
+
+std::string RegisterCommand::help(){
+    std::stringstream text;
+    text << "名称：register" << std::endl;
+    text << "描述：注册文档打开程序路径" << std::endl;
+    text << "格式：register + 空格 + 打开器名称 + 空格 + 程序路径" << std::endl;
+    text << "示例：register WordDoc c:\\wps.exe" << std::endl;
+
+    return text.str();
+}

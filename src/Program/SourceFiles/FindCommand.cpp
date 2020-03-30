@@ -124,3 +124,13 @@ std::string FindCommand::exec (std::string commandName, std::string paramStr, st
         return add(nextCmd);
     }
 };
+
+std::string FindCommand::help(){
+    std::stringstream text;
+    text << "名称：find" << std::endl;
+    text << "描述：根据关键字查找文档" << std::endl;
+    text << "格式：find + 【空格 + 关键字】n" << std::endl;
+    text << "示例：find key1 key2" << std::endl;
+
+    return text.str();
+}

@@ -1,4 +1,5 @@
 #include <regex>
+#include <sstream>
 #include "../HeaderFiles/AddCommand.hpp"
 #include "../../Infrastructure/HeaderFiles/StringOperate.hpp"
 #include "../HeaderFiles/CommandContext.hpp"
@@ -17,4 +18,14 @@ std::string AddCommand::exec(std::string commandName, std::string paramStr, std:
 
     CommandContext::Instances()->docFinder->addKeyWordToDoc({key}, path);
     return "";
+}
+
+std::string AddCommand::help(){
+    std::stringstream text;
+    text << "名称：add" << std::endl;
+    text << "描述：添加关键字到文档" << std::endl;
+    text << "格式：add + 空格 + 文档相对路径 + 【空格 + 关键字】n" << std::endl;
+    text << "示例：add /File.txt key1 key2" << std::endl;
+
+    return text.str();
 }
