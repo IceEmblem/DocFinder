@@ -166,6 +166,28 @@ namespace DocFind
         }
     }
 
+    void DocumentManager::deleteKeyWordToDocOfNoExistDoc(std::vector<std::shared_ptr<Document>> &docs){
+        bool isNeedUpdateFile = false;
+        std::vector<KeyWordToDoc>::iterator removeItems;
+        for(auto keyWordToDoc = keyWordToDocs->begin();
+            keyWordToDoc != keyWordToDocs->end();
+            keyWordToDoc++
+        ){
+            int index = getDocIndexForPath(docs, keyWordToDoc->relativePath);
+            if(index >= 0){
+                continue;
+            }
+
+            keyWordToDocs->erase(keyWordToDoc);
+            keyWordToDoc--;
+            isNeedUpdateFile = true;
+        }
+
+        if(isNeedUpdateFile == true){
+            writeKeyWordToDocToFile();
+        }
+    }
+
     void DocumentManager::readDocTitleFromFile(){
         _documentTitles = std::make_shared<std::map<std::string, DocumentTitle>>();
 
@@ -280,6 +302,30 @@ namespace DocFind
             writeDocTitleToFile();
         }
     }
+
+    // 删除不存在对应文档的标题
+    void DocumentManager::deleteTitleOfNoExitstDoc(std::vector<std::shared_ptr<Document>> &docs){
+        std::vector<std::string> removeItems;
+        for(auto docTitle : *_documentTitles){
+            auto docIndex = getDocIndexForPath(docs, docTitle.first);
+            if(docIndex == -1){
+                removeItems.push_back(docTitle.first);
+                continue;
+            }
+        }
+
+        // 是否需要更新存放标题的文件
+        bool isNeedUpdateTitleFile = false;
+        for(auto removeItem : removeItems)
+        {
+            _documentTitles->erase(removeItem);
+            isNeedUpdateTitleFile = true;
+        }
+
+        if(isNeedUpdateTitleFile){
+            writeDocTitleToFile();
+        }
+    }
     
     std::shared_ptr<Directories> DocumentManager::createDirectories(std::string relativePath, std::vector<std::string> keys)
     {
@@ -345,7 +391,9 @@ namespace DocFind
 
         std::vector<std::shared_ptr<Document>> docs = DocFind::getDocuments(_dir);
         addKeysToDocObject(docs);
+        deleteKeyWordToDocOfNoExistDoc(docs);
         addTitleToDocObject(docs);
+        deleteTitleOfNoExitstDoc(docs);
         keyDocument = std::make_shared<std::vector<std::shared_ptr<Document>>>(docs);
     }
     

@@ -31,6 +31,8 @@ namespace DocFind
         void writeKeyWordToDocToFile();
         // 将 KeyWordToDoc 中的关键字添加到 Document 中
         void addKeysToDocObject(std::vector<std::shared_ptr<Document>> &docs);
+        // 删除不存在对应文档的KeyWordToDoc
+        void deleteKeyWordToDocOfNoExistDoc(std::vector<std::shared_ptr<Document>> &docs);
 
         // 从文件中读取文档标题
         void readDocTitleFromFile();
@@ -38,6 +40,8 @@ namespace DocFind
         void writeDocTitleToFile();
         // 读取文档内容，将文档内容的标题作为关键字添加到文档对象中
         void addTitleToDocObject(std::vector<std::shared_ptr<Document>> &docs);
+        // 删除不存在对应文档的标题
+        void deleteTitleOfNoExitstDoc(std::vector<std::shared_ptr<Document>> &docs);
 
         // 生成目录
         std::shared_ptr<Directories> createDirectories(std::string relativePath, std::vector<std::string> keys);

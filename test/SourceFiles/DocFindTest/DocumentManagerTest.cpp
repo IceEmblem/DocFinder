@@ -14,38 +14,22 @@ static std::string currentDirPath = "./test/bin/DocumentManagerTestDir";
 class DocumentManagerTest:public testing::Test
 {
 public:
-    // 第一个测试用例开始时调用
-    static void SetUpTestCase()
-    {
-        DirectoriesOperate::createDir(currentDirPath);
-    }
-    
-    // 最后一个测试用例结束后调用
-    static void TearDownTestCase()
-    {
-        system(("rm -r " + currentDirPath).c_str());
-    }
-
     // 每个测试用例开始时调用
     void SetUp()
     {
-        std::string path = currentDirPath+"/DocFinder/KeyWordToDocs.txt";
-        if(FileOperate::isExistFile(path)){
-            // 清理文档
-            FileOperate::writeFileText(path, "");
-        }
+        DirectoriesOperate::createDir(currentDirPath);
     }
 
     // 每个测试用例结束后调用
     void TearDown()
     {
+        system(("rm -r " + currentDirPath).c_str());
     } 
 };
 
 TEST_F(DocumentManagerTest, getDocuments)
 {
-    DirectoriesOperate::createDir(currentDirPath + "/getDocumentsDir");
-    FileOperate::createFile(currentDirPath+"/getDocumentsDir/getDocuments_file.txt");
+    FileOperate::createFile(currentDirPath+"/getDocuments_file.txt");
     
     DocumentManager documentManager(currentDirPath);
     auto results = documentManager.getDocuments();
@@ -54,9 +38,8 @@ TEST_F(DocumentManagerTest, getDocuments)
     for(auto result : results){
         if(result->name == "getDocuments_file.txt"){
             isHaveFile = true;
-            EXPECT_EQ(result->relativePath, "/getDocumentsDir/getDocuments_file.txt");
-            EXPECT_EQ(result->keys[0], "getDocumentsDir");
-            EXPECT_EQ(result->keys[1], "getDocuments_file.txt");
+            EXPECT_EQ(result->relativePath, "/getDocuments_file.txt");
+            EXPECT_EQ(result->keys[0], "getDocuments_file.txt");
         }
     }
 
@@ -125,8 +108,7 @@ TEST_F(DocumentManagerTest, getDocuments_docTitle_pathHaveSpace)
 
 TEST_F(DocumentManagerTest, addKeyWordToDoc)
 {
-    DirectoriesOperate::createDir(currentDirPath + "/addKeyWordToDocDir");
-    FileOperate::createFile(currentDirPath+"/addKeyWordToDocDir/addKeyWordToDoc_file.txt");
+    FileOperate::createFile(currentDirPath+"/addKeyWordToDoc_file.txt");
 
     DocumentManager documentManager(currentDirPath);
     auto results = documentManager.getDocuments();
@@ -166,8 +148,7 @@ TEST_F(DocumentManagerTest, addKeyWordToDoc)
 // 路径包含空格
 TEST_F(DocumentManagerTest, addKeyWordToDoc_pathHaveSpace)
 {
-    DirectoriesOperate::createDir(currentDirPath + "/addKeyWordToDocDir");
-    FileOperate::createFile(currentDirPath+"/addKeyWordToDocDir/addKeyWordToDoc file.txt");
+    FileOperate::createFile(currentDirPath+"/addKeyWordToDoc file.txt");
 
     DocumentManager documentManager(currentDirPath);
     auto results = documentManager.getDocuments();
