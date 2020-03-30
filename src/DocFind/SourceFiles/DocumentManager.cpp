@@ -21,6 +21,7 @@ namespace DocFind
             middleIndex++;
         }
 
+        bool isBreak = false;
         while (true)
         {
             int result = docs[middleIndex]->relativePath.compare(path);
@@ -28,9 +29,15 @@ namespace DocFind
                 return middleIndex;
             }
 
-            // 如果最大路径和最小路径相等则没有匹配
-           if(minIndex == maxIndex){
+            if(isBreak){
                 return -1;
+            }
+
+            // 中间路径有 (最小路径 + 最大路径)/2 得出
+            // 如果中间路径和最大路径或最小路径相等，则说明 最小路径 和 最大路径 以相差为 1
+            // 中间路径刚比较过，也就是 最小路径 或 最大路径 刚比较过，只需再比较一次即可
+            if(middleIndex == maxIndex || middleIndex == minIndex){
+                isBreak = true;
             }
 
             // 如果 中间路径 > 比较的路径
@@ -306,12 +313,14 @@ namespace DocFind
     // 删除不存在对应文档的标题
     void DocumentManager::deleteTitleOfNoExitstDoc(std::vector<std::shared_ptr<Document>> &docs){
         std::vector<std::string> removeItems;
+        int index = 0;
         for(auto docTitle : *_documentTitles){
             auto docIndex = getDocIndexForPath(docs, docTitle.first);
             if(docIndex == -1){
                 removeItems.push_back(docTitle.first);
                 continue;
             }
+            index++;
         }
 
         // 是否需要更新存放标题的文件
